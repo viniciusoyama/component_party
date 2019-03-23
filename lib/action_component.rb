@@ -3,6 +3,9 @@ require 'action_component/component_renderer'
 require 'action_component/railtie'
 
 module ActionComponent
+  # Configuration class for ActionComponent
+  # @attr components_path [String] Components folder path (defaults to 'app/components')
+  # @attr components_path [String] Component's template file name (defaults to 'template')
   class Configuration
     attr_accessor :components_path
     attr_accessor :template_file_name

@@ -1,16 +1,23 @@
 module ActionComponent
+  # Renders a given component
   class ComponentRenderer
+    class ComponentTemplateFileNotFound < StandardError; end
+
     def initialize(view_renderer = ActionView::Renderer.new(lookup_context))
       @view_renderer = view_renderer
     end
 
     def render(opts)
-      @view_renderer.render(rendering_context, file: template_path_from_component_path(opts[:path]))
+      file_path = template_path_from_component_path(opts[:path])
+
+      @view_renderer.render(rendering_context, file: file_path)
     end
 
     def rendering_context
-      Class.new do
-      end.new
+      Class.new(ActionView::Base) do
+        include ::Rails.application.routes.url_helpers
+        include ::Rails.application.routes.mounted_helpers
+      end.new(@view_renderer, {}, nil)
     end
 
     def template_path_from_component_path(component_path, template_file_name: ActionComponent.configuration.template_file_name)

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'Component Rendering:', type: :view do
+describe 'Component rendering from view', type: :view do
   before(:each) do
     users = [OpenStruct.new(name: 'Viny')]
     users << OpenStruct.new(name: 'Pedro')
     assign(:users, users)
 
-    render file: 'fixtures/user_listing'
+    render file: 'testing/user_listing'
   end
 
   it 'Allows multiple renderings per view' do
