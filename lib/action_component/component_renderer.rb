@@ -1,12 +1,11 @@
 module ActionComponent
   class ComponentRenderer
-    def initialize(view_renderer)
+    def initialize(view_renderer = ActionView::Renderer.new(lookup_context))
       @view_renderer = view_renderer
     end
 
     def render(opts)
-      rendering_file_path = get_file_path_from_component_path(opts[:path])
-      @view_renderer.render(rendering_context, file: rendering_file_path)
+      @view_renderer.render(rendering_context, file: template_path_from_component_path(opts[:path]))
     end
 
     def rendering_context
@@ -14,8 +13,14 @@ module ActionComponent
       end.new
     end
 
-    def get_file_path_from_component_path(path)
-      path
+    def template_path_from_component_path(component_path, template_file_name: 'template')
+      File.join(component_path, template_file_name).to_s
+    end
+
+    def lookup_context
+      @lookup_context ||= ActionView::LookupContext.new(
+        ['app/views']
+      )
     end
   end
 end

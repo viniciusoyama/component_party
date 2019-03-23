@@ -1,0 +1,25 @@
+<%
+  import_action_component 'Header', path: 'header'
+  import_action_component 'Notice', path: 'notice'
+%>
+
+
+<%= Header() %>
+
+<%= Notice() %>
+<%= Notice() %>
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

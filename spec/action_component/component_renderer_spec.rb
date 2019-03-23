@@ -1,20 +1,25 @@
 require 'rails_helper'
 
 describe ActionComponent::ComponentRenderer do
-  let(:mock_action_view_renderer) { double() }
-
-  let(:subject) do
-    described_class.new(mock_action_view_renderer)
+  subject do
+    view_renderer = ActionView::Renderer.new(ActionView::LookupContext.new(
+      [fixture_path('/components')]
+    ))
+    ActionComponent::ComponentRenderer.new(view_renderer)
   end
 
   describe '#render' do
-    it "calls render on action_view_renderer" do
-      mock_context = double()
+    it "renders the component template" do
+      rendered = subject.render(path: '/user-list')
+      expect(rendered).to include('Listing Users')
+    end
+  end
 
-      expect(mock_action_view_renderer).to receive(:render).with(mock_context, file: 'my-path')
-      allow(subject).to receive(:rendering_context).and_return(mock_context)
+  describe '#template_path_from_component_path' do
+    it "Joins the component path with the default template file name" do
+      path = subject.template_path_from_component_path('my-long/path/on/folder')
 
-      subject.render(path: 'my-path')
+      expect(path).to eq('my-long/path/on/folder/template')
     end
   end
 end
