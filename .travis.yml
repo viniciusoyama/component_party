@@ -1,6 +1,6 @@
 env:
   global:
-    - CC_TEST_REPORTER_ID=f25e0245d4b89b0d001b8abb6279ae4cac6c40ed5e64d6dfaa8b2f1dfd1f6893
+    - CC_TEST_REPORTER_ID=de0681698d0dadbc41916a458ca0fc4eb5ed20f154cbae8a3069bf03b0a7f1e1
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 
 language: ruby
@@ -20,7 +20,7 @@ before_script:
 script:
   - bundle exec rubocop -c .rubocop.yml
   - bundle exec rspec
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  # - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 
 notifications:
   email: false
