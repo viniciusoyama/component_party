@@ -6,5 +6,9 @@ module ActionComponent
         component_renderer.render(opts)
       end
     end
+
+    def component_renderer
+      @component_renderer ||= ActionComponent::ComponentRenderer.new(view_renderer)
+    end
   end
 end

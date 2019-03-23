@@ -1,0 +1,19 @@
+<% import_action_component 'Header', path: 'header' %>
+
+<h1>Listing Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+    </tr>
+  </thead>
+  <%= Header() %>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
