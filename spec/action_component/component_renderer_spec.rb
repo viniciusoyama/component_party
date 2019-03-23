@@ -22,4 +22,11 @@ describe ActionComponent::ComponentRenderer do
       expect(path).to eq('my-long/path/on/folder/template')
     end
   end
+
+
+  describe '#lookup_context' do
+    it "setups a LookupContext according to the gem configuration" do
+      
+    end
+  end
 end
