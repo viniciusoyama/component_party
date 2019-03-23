@@ -19,7 +19,10 @@ module ActionComponent
 
     def lookup_context
       @lookup_context ||= ActionView::LookupContext.new(
-        ['app/views']
+        [
+          ActionComponent.configuration.components_path,
+          Rails.root.join(ActionComponent.configuration.components_path)
+        ]
       )
     end
   end
