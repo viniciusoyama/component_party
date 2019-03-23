@@ -9,16 +9,14 @@ describe ActionComponent do
     end
 
     describe 'components_path configuration' do
-      specify 'I can set my own path' do
-        ActionComponent.configure do |config|
-          config.components_path = 'my-path'
-        end
-
-        expect(ActionComponent.configuration.components_path).to eq('my-path')
-      end
-
       specify 'it has /app/components as default' do
         expect(ActionComponent.configuration.components_path).to eq('app/components')
+      end
+    end
+
+    describe 'template_file_name configuration' do
+      specify 'it has template as default' do
+        expect(ActionComponent.configuration.template_file_name).to eq('template')
       end
     end
 

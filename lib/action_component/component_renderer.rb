@@ -13,7 +13,7 @@ module ActionComponent
       end.new
     end
 
-    def template_path_from_component_path(component_path, template_file_name: 'template')
+    def template_path_from_component_path(component_path, template_file_name: ActionComponent.configuration.template_file_name)
       File.join(component_path, template_file_name).to_s
     end
 
