@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+source 'https://rubygems.org'
+
+# this file is pretty much only used for adding migrations
+gem 'rails'
+gem 'action_component'
+gem 'sqlite3'

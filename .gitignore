@@ -6,6 +6,7 @@
 /doc/
 /pkg/
 /spec/reports/
+/spec/support/rails_app/log/*
 /tmp/
 .DS_Store
 .byebug_history

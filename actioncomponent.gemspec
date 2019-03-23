@@ -10,11 +10,24 @@ Gem::Specification.new do |s|
   s.homepage    =
     'http://rubygems.org/gems/actioncomponent'
   s.license       = 'MIT'
+  s.test_files = s.files.grep(%r{^(test|spec|features)/})
+
+  s.add_dependency 'rails', '>= 4.0.0'
 
 
-  s.add_development_dependency 'bundler', '~> 1.11'
-  s.add_development_dependency 'byebug'
-  s.add_development_dependency 'rubocop', '0.49'
+  # Quality Control
+  s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rspec'
   s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'rspec', '~> 3.6'
+
+  # Debugging
+  s.add_development_dependency 'awesome_print'
+  s.add_development_dependency 'pry-byebug'
+
+  # for testing a gem with a rails app (controller specs)
+  # https://codingdaily.wordpress.com/2011/01/14/test-a-gem-with-the-rails-3-stack/
+  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'rails', '> 4.0'
+  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'rspec-rails'
 end
