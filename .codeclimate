@@ -1,0 +1,23 @@
+engines:
+  rubocop:
+    enabled: true
+    #checks:
+    #  Rubocop/Metrics/ClassLength:
+    #    enabled: false
+  brakeman:
+    enabled: false
+  eslint:
+    enabled: false
+  csslint:
+    enabled: false
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby:
+      - javascript:
+ratings:
+  paths:
+    - lib/**
+exclude_paths:
+  - spec/**/*
