@@ -70,10 +70,7 @@ app
 ```ruby
 
 # ...
-def index
-  # ...
-  render component: 'user/index', component_locals: { users: @users }
-end
+# TODO
 # ...
 
 ```
@@ -217,7 +214,7 @@ ActionComponent.configure do |config|
   # Default name for the html/erb/slim/etc template file inside the component folder
   config.template_file_name = 'template'
 
-  # Default name for the html/erb/slim/etc template file inside the component folder
+  # Default name for the view model file inside the component folder
   config.view_model_file_name = 'view_model'
 end
 
