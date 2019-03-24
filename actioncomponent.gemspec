@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
   s.name        = 'actioncomponent'
-  s.version     = '0.0.4'
+  s.version     = '0.1.1'
   s.date        = '2019-03-21'
   s.summary     = 'Stop using views: frontend components architecture for Ruby on Rails'
   s.description = 'Stop using views: frontend components architecture for Ruby on Rails'
   s.authors     = ['Vinícius Oyama']
   s.email       = 'contact@viniciusoyama.com'
-  s.files       = ['lib/actioncomponent.rb']
+  s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.homepage    =
     'http://rubygems.org/gems/actioncomponent'
   s.license = 'MIT'

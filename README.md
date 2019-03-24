@@ -1,10 +1,17 @@
-# Welcome to action_component gem
+# Welcome to actioncomponent gem
 
 [![Travis](https://travis-ci.org/viniciusoyama/action_component.svg?branch=master)](https://travis-ci.org/viniciusoyama/action_component)
 [![Code Climate](https://codeclimate.com/github/viniciusoyama/action_component/badges/gpa.svg)](https://codeclimate.com/github/viniciusoyama/action_component)
 [![Test Coverage](https://codeclimate.com/github/viniciusoyama/action_component/badges/coverage.svg)](https://codeclimate.com/github/viniciusoyama/action_component)
 
 Frontend components for Ruby on Rails: group your view logic, html, css and javascript files in components to be used in views or directly rendered from controllers.
+
+# How to use?
+
+**Gemfile**
+```ruby
+gem 'actioncomponent'
+```
 
 # What do you get?
 

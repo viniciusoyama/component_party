@@ -1,8 +1,8 @@
-require 'action_component/importer_helper'
-require 'action_component/component'
-require 'action_component/component/view_model'
-require 'action_component/component/renderer'
-require 'action_component/railtie'
+require 'actioncomponent/importer_helper'
+require 'actioncomponent/component'
+require 'actioncomponent/component/view_model'
+require 'actioncomponent/component/renderer'
+require 'actioncomponent/railtie'
 
 module ActionComponent
   # Configuration class for ActionComponent
