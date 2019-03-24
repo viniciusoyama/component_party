@@ -25,6 +25,12 @@ describe ActionComponent::Component do
       expect(subject.create_view_model({})).to be_an_instance_of(ActionComponent::Component::ViewModel)
     end
 
+    it "merges vm with default data" do
+      subject = ActionComponent::Component.new('/component_without_vm')
+      allow(subject).to receive(:view_model_default_data).and_return({ aditional: 'more'} )
+      expect(subject.create_view_model.aditional).to eq('more')
+    end
+
     it "searches for a constant with the vm path" do
       lookup_context = ActionView::LookupContext.new(
         [fixture_path('/components')]
@@ -36,7 +42,7 @@ describe ActionComponent::Component do
     end
 
     it 'passes the data to the view model' do
-      expect(ActionComponent::Component::ViewModel).to receive(:new).with(number: 8, word: 'hi').and_call_original
+      expect(ActionComponent::Component::ViewModel).to receive(:new).with(hash_including(number: 8, word: 'hi')).and_call_original
       subject = ActionComponent::Component.new('/component_without_vm')
       vm = subject.create_view_model(number: 8, word: 'hi')
     end
@@ -49,6 +55,20 @@ describe ActionComponent::Component do
       })
       vm = subject.create_view_model()
       expect(vm.h).to be(mock_helpers)
+    end
+  end
+
+  describe '#view_model_default_data' do
+    it 'adds helper methods' do
+      subject = ActionComponent::Component.new('/component_without_vm')
+      expect(subject.class).to receive(:helper_vm_params).and_return({ helper: 'existing' })
+      expect(subject.view_model_default_data[:helper]).to eq('existing')
+    end
+
+    it 'adds lookup_context' do
+      subject = ActionComponent::Component.new('/component_without_vm')
+      expect(subject).to receive(:lookup_context).and_return('existing' )
+      expect(subject.view_model_default_data[:lookup_context]).to eq('existing')
     end
   end
 

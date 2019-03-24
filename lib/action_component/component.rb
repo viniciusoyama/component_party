@@ -48,9 +48,14 @@ module ActionComponent
         vm_class = ActionComponent::Component::ViewModel
       end
 
-      vm_class.new(**view_model_data.merge(self.class.helper_vm_params))
+      vm_class.new(**view_model_data.merge(view_model_default_data))
     end
 
+    def view_model_default_data
+      # lookup_context is necessary for when there is an exception in our template
+      # this is used in order to better describe the error stack
+      self.class.helper_vm_params.merge({lookup_context: lookup_context})
+    end
     def full_component_path
       Rails.root.join(ActionComponent.configuration.components_path)
     end
