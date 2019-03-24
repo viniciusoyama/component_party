@@ -11,10 +11,12 @@ module ActionComponent
   class Configuration
     attr_accessor :components_path
     attr_accessor :template_file_name
+    attr_accessor :view_model_file_name
 
     def initialize
       @components_path = 'app/components'
       @template_file_name = 'template'
+      @view_model_file_name = 'view_model'
     end
   end
 

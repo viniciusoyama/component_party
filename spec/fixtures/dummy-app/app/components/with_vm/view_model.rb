@@ -1,0 +1,2 @@
+class WithVm::ViewModel
+end

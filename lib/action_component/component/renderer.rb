@@ -26,7 +26,7 @@ module ActionComponent
 
       attr_accessor :view_model
 
-      def initialize(lookup_context, view_model = ActionComponent::Component::ViewModel.new)
+      def initialize(lookup_context, view_model)
         @lookup_context = lookup_context
         @view_model = view_model
       end

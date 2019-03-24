@@ -20,5 +20,10 @@ describe ActionComponent do
       end
     end
 
+    describe 'view_model_file_name configuration' do
+      specify 'it has view_model as default' do
+        expect(ActionComponent.configuration.view_model_file_name).to eq('view_model')
+      end
+    end
   end
 end

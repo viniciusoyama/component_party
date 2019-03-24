@@ -91,6 +91,9 @@ ActionComponent.configure do |config|
 
   # Default name for the html/erb/slim/etc template file inside the component folder
   config.template_file_name = 'template'
+
+  # Default name for the html/erb/slim/etc template file inside the component folder
+  config.view_model_file_name = 'view_model'
 end
 
 ```

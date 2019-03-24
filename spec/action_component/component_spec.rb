@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe ActionComponent::Component do
   subject {
-    ActionComponent::Component.new('/user-list')
+    ActionComponent::Component.new('/user_list')
   }
 
   describe '#render' do
@@ -12,6 +12,23 @@ describe ActionComponent::Component do
       expect(mock_renderer).to receive(:render)
 
       subject.render()
+    end
+  end
+
+  describe '#view_model' do
+    it "returns a default instance if custom vm file doesn't exists" do
+      subject = ActionComponent::Component.new('/component_without_vm')
+      expect(subject.view_model).to be_an_instance_of(ActionComponent::Component::ViewModel)
+    end
+
+    it "searches for a constant with the vm path" do
+      lookup_context = ActionView::LookupContext.new(
+        [fixture_path('/components')]
+      )
+
+      subject = ActionComponent::Component.new('/with_vm', lookup_context)
+
+      expect(subject.view_model).to be_an_instance_of(WithVm::ViewModel )
     end
   end
 

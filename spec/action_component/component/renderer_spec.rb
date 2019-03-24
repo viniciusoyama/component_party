@@ -1,15 +1,16 @@
 require 'rails_helper'
 
 describe ActionComponent::Component::Renderer do
+  let(:view_model) { double() }
   subject do
     ActionComponent::Component::Renderer.new(ActionView::LookupContext.new(
       [fixture_path('/components')]
-    ))
+    ), view_model)
   end
 
   describe '#render' do
     it "renders the component template" do
-      rendered = subject.render(component_path: '/user-list')
+      rendered = subject.render(component_path: '/user_list')
       expect(rendered).to include('Listing Users')
     end
   end
@@ -25,8 +26,8 @@ describe ActionComponent::Component::Renderer do
 
     context 'exposing view model' do
       it 'exposes ActionComponent::ViewModel by default' do
-        expect(context.vm).to be_an_instance_of(ActionComponent::Component::ViewModel)
-        expect(context.view_model).to be_an_instance_of(ActionComponent::Component::ViewModel)
+        expect(context.vm).to be(view_model)
+        expect(context.view_model).to be(view_model)
       end
     end
   end
