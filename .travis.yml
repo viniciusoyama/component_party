@@ -1,6 +1,5 @@
 env:
   global:
-    - CC_TEST_REPORTER_ID=de0681698d0dadbc41916a458ca0fc4eb5ed20f154cbae8a3069bf03b0a7f1e1
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 
 language: ruby
@@ -13,14 +12,13 @@ rvm:
 
 bundler_args: "--binstubs --standalone --without documentation --path ../bundle"
 
-before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-
 script:
   - bundle exec rubocop -c .rubocop.yml
   - bundle exec rspec
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+
+code_climate:
+  repo_token:
+    secure: "FQ7hKFlgEN4BEX232fAiyIcNDuKCGz+3r4kTbtnYjcXHYbeqiggKojjVyah05I3NuX/UJY/bA7alG8BTM87PBHZ+bkR+yBkphzr3v4N5ku9LfQAGmExCv3wPOgQ9r6wmVDvEZXkQGyK7AuKAteTIzy3HYqGNAdJQ+LEIOcIC6EIfewBpOCmzxeRyTvNO+Ms5hcZmFk3NHVXF/thbfclc+8OzS2L1p+hJFQDCOGGcZyylV6zkH5oRoth9SL1hNcEBURpDIWPA7zDwpQIYMNgL01b6OlgUKgQt7+mNCSEhyICHw0jYiJh+LcQV6GikJguG8J5DLw1lYrFJqfQjhnkDCNFhEGc2MOnO72+3/qSmr315/UspfKHsaR1pT9ebT2kU3hzMvH60qnDycRdC0Q9vrblO6dLvaIj2Gj+DFv1tLbH3N1XmVCL1h0tnET7urpbfYnpzw3GKC8AvS9sApRNNC0ezbdPJlinmaR2e/aRf5sATiUCjyfJwRSWc4IlYLF/iSopgVN3X6ahxQFJewoAYguIePkLuoZKVcHlMVRfvdieM+HAutncSoU5yNMVvlTsc+ZUy0uifhC7kxQorMuJ8PFWyB6bf0ZLN7XmZ0/kNkULy18yUMfwjMtpJ/UGawBYNeqJp171NFfnXS/2VWkhdslB79SFfJBuz2ufUZi4EyqY="
 
 notifications:
   email: false
