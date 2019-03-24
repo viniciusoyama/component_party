@@ -18,7 +18,8 @@ module ActionComponent
     def create_component(component_path, view_model_data)
       ActionComponent::Component.new(
         component_path: component_path,
-        view_model_data: view_model_data.merge(c: controller, controller: controller))
+        view_model_data: view_model_data.merge(c: controller, controller: controller)
+      )
     end
   end
 end

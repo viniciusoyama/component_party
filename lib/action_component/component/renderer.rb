@@ -3,7 +3,7 @@ module ActionComponent
   class Component
     class Renderer < ActionView::Renderer
       class ComponentTemplateFileNotFound < StandardError; end
-      
+
       attr_reader :view_model
 
       def initialize(lookup_context, view_model)
@@ -19,7 +19,6 @@ module ActionComponent
       def template_path_from_component_path(component_path, template_file_name: ActionComponent.configuration.template_file_name)
         File.join(component_path, template_file_name).to_s
       end
-
     end
   end
 end

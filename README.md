@@ -132,9 +132,9 @@ We only use our own view model if there is no view_model.rb file inside your com
 So, imagine that we want our vm to have a random_greeting method. We can can create a view model like this:
 
 
-## Use helpers inside your components/view models
+## Use helpers inside your components
 
-When initializing the view model we also provide two aditional parameters (:h and :helper) so you can have access to rails helpers.
+When initializing the view model we also provide two additionals parameters (:h and :helper) so you can have access to rails helpers.
 
 As all view model methods are available to your template your will have access to a `h` or `helper` like this:
 
@@ -201,6 +201,36 @@ end
   <%= random_greeting %> Today is <%= formated_date %>
 </header>
 ```
+
+
+## Access your controller in your VM or Template
+
+When rendering a component, a `c` or `controller` parameter is passed through so you can have access to all your request data inside your VM or template.
+
+**view_model**
+
+```ruby
+class ControllerData::ViewModel < ActionComponent::Component::ViewModel
+
+  def formated_page
+    "Current page: #{c.params[:page]}"
+  end
+
+  def formated_search
+    "Searching for: #{controller.params[:search]}"
+  end
+
+end
+```
+
+**template.erb**
+
+```html
+<%= formated_search %>
+
+<%= formated_page %>
+```
+
 
 # Configuration
 
