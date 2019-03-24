@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe ActionComponent::Component do
+  before(:each) do
+    allow(ActionComponent::Component).to receive(:helper_vm_params).and_return({})
+  end
+
   subject {
     ActionComponent::Component.new('/user_list')
   }
@@ -35,6 +39,16 @@ describe ActionComponent::Component do
       expect(ActionComponent::Component::ViewModel).to receive(:new).with(number: 8, word: 'hi').and_call_original
       subject = ActionComponent::Component.new('/component_without_vm')
       vm = subject.create_view_model(number: 8, word: 'hi')
+    end
+
+    it 'passes helpers to the VM' do
+      subject = ActionComponent::Component.new('/component_without_vm')
+      mock_helpers = double()
+      expect(ActionComponent::Component).to receive(:helper_vm_params).and_return({
+        h: mock_helpers
+      })
+      vm = subject.create_view_model()
+      expect(vm.h).to be(mock_helpers)
     end
   end
 

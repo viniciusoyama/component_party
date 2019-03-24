@@ -1,7 +1,21 @@
 require 'rails_helper'
 
 describe ActionComponent::Component::Renderer do
-  let(:view_model) { double() }
+  let(:helper_object) do
+    Class.new do
+      def l
+      end
+
+      def t
+      end
+    end.new
+  end
+  let(:view_model) {
+    vm = double()
+    allow(vm).to receive(:h).and_return(helper_object)
+    allow(vm).to receive(:helper).and_return(helper_object)
+    vm
+  }
   subject do
     ActionComponent::Component::Renderer.new(ActionView::LookupContext.new(
       [fixture_path('/components')]
@@ -20,7 +34,6 @@ describe ActionComponent::Component::Renderer do
 
     it 'exposes helpers' do
       expect(context.helper).to respond_to(:l)
-      expect(context.h).to respond_to(:users_path)
       expect(context.helper).to respond_to(:t)
     end
 

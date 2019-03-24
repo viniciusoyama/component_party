@@ -1,6 +1,22 @@
 module ActionComponent
   # Represents a component with a template, style and javascript file
   class Component
+    class << self
+      def helper_object
+        @helper_object = Class.new(ActionView::Base) do
+          include ::Rails.application.routes.url_helpers
+          include ::Rails.application.routes.mounted_helpers
+        end.new
+      end
+
+      def helper_vm_params
+        {
+          h: helper_object,
+          helper: helper_object
+        }
+      end
+    end
+
     def initialize(component_path, lookup_context = nil)
       @component_path = component_path.to_s.gsub(%r{^/}, '')
       @lookup_context = lookup_context
@@ -22,8 +38,9 @@ module ActionComponent
       )
     end
 
-    def create_view_model(view_model_data)
+    def create_view_model(**view_model_data)
       vm_class = ActionComponent::Component::ViewModel
+
       begin
         vm_file_path = Pathname.new(@component_path).join(ActionComponent.configuration.view_model_file_name)
         vm_class = ActiveSupport::Inflector.camelize(vm_file_path).constantize
@@ -31,7 +48,7 @@ module ActionComponent
         vm_class = ActionComponent::Component::ViewModel
       end
 
-      vm_class.new(**view_model_data)
+      vm_class.new(**view_model_data.merge(self.class.helper_vm_params))
     end
 
     def vm_class

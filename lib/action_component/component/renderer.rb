@@ -6,9 +6,11 @@ module ActionComponent
       class ViewContext
         include ActionComponent::ImporterHelper
 
-        def initialize(lookup_context, helper_object, view_model)
+        attr_accessor :lookup_context
+
+        def initialize(lookup_context, view_model)
           @lookup_context = lookup_context
-          @helper_object = helper_object
+          @helper_object = view_model.helper
           @view_model = view_model
         end
 
@@ -34,21 +36,21 @@ module ActionComponent
       end
 
       def create_view_context
-        ViewContext.new(lookup_context, helper_object, view_model)
+        ViewContext.new(lookup_context, view_model)
       end
 
       def template_path_from_component_path(component_path, template_file_name: ActionComponent.configuration.template_file_name)
         File.join(component_path, template_file_name).to_s
       end
-
-      private
-
-      def helper_object
-        @helper_object = Class.new(ActionView::Base) do
-          include ::Rails.application.routes.url_helpers
-          include ::Rails.application.routes.mounted_helpers
-        end.new
-      end
+      #
+      # private
+      #
+      # def helper_object
+      #   @helper_object = Class.new(ActionView::Base) do
+      #     include ::Rails.application.routes.url_helpers
+      #     include ::Rails.application.routes.mounted_helpers
+      #   end.new
+      # end
     end
   end
 end

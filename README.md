@@ -78,28 +78,6 @@ end
 
 ```
 
-## Use helpers inside your components
-
-In a component's template you will have access to a `h` or `helper` method that will expose all the helpers from Rails.
-
-**Example of a component's templatefile**
-
-```
-<div class="child">
-  <div class="date">
-    <%= helper.l(Date.new(2019, 01, 03)) %>
-  </div>
-
-  <div class="routes">
-    <%= h.users_path %>
-  </div>
-
-  <div class="translation">
-    <%= h.t('hello')%>
-  </div>
-</div>
-```
-
 ## Pass data to your components
 
 When rendering your can pass data in a hash/named parameters format. The data will be exposed in your template through a view model.  
@@ -156,6 +134,28 @@ We only use our own view model if there is no view_model.rb file inside your com
 
 So, imagine that we want our vm to have a random_greeting method. We can can create a view model like this:
 
+
+## Use helpers inside your components
+
+In a component's template you will have access to a `h` or `helper` method that will be delegated to the vm instance. So you can use helpers like this:
+
+**Example of a component's templatefile**
+
+```
+<div class="child">
+  <div class="date">
+    <%= helper.l(Date.new(2019, 01, 03)) %>
+  </div>
+
+  <div class="routes">
+    <%= h.users_path %>
+  </div>
+
+  <div class="translation">
+    <%= h.t('hello')%>
+  </div>
+</div>
+```
 
 **app/components/header/view_model.rb**
 
