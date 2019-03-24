@@ -1,0 +1,3 @@
+class InvalidVm::ViewModel
+
+end

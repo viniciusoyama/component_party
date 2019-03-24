@@ -2,6 +2,8 @@ module ActionComponent
   # Renders a given component
   class Component
     class ViewModel
+      include ActionComponent::ImporterHelper
+
       def initialize(**args)
         generate_methods_from_hash(args)
       end

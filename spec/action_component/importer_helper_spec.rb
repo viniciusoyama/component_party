@@ -9,11 +9,18 @@ describe ActionComponent::ImporterHelper do
     let(:subject) do
       sub = Class.new do
         include ActionComponent::ImporterHelper
+
+        def controller
+        end
       end.new
 
       allow(sub).to receive(:create_component).and_return(mock_component)
 
       sub
+    end
+
+    before(:each) do
+      allow(mock_component).to receive(:render)
     end
 
     describe 'generated component method' do
@@ -32,7 +39,7 @@ describe ActionComponent::ImporterHelper do
       end
 
       it "Passes the arguments" do
-        expect(mock_component).to receive(:render).with(a: 2)
+        expect(subject).to receive(:create_component).with('my_path_to_header/folder', { a: 2 })
 
         subject.import_action_component 'Header', path: 'my_path_to_header/folder'
 
@@ -46,11 +53,16 @@ describe ActionComponent::ImporterHelper do
       end
     end
   end
-  describe '#component' do
+
+  describe '#create_component' do
     let(:mock_view_renderer) { double() }
+
     let(:subject) do
       sub = Class.new do
         include ActionComponent::ImporterHelper
+
+        def controller
+        end
       end.new
 
       allow(sub).to receive(:view_renderer).and_return(mock_view_renderer)
@@ -59,7 +71,14 @@ describe ActionComponent::ImporterHelper do
     end
 
     it "returns an instace of ActionComponent::Component::Renderer" do
-      expect(subject.create_component('my path')).to be_an_instance_of(ActionComponent::Component)
+      expect(subject.create_component('my path', {})).to be_an_instance_of(ActionComponent::Component)
+    end
+
+    it "passes the controller as VM data" do
+      mock_controller = double
+      allow(subject).to receive(:controller).and_return(mock_controller)
+      expect(ActionComponent::Component).to receive(:new).with(component_path: 'my path', view_model_data: hash_including(name: 'ze', controller: mock_controller, c: mock_controller))
+      subject.create_component('my path', { name: 'ze' })
     end
   end
 end

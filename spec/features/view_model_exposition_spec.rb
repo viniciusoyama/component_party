@@ -18,4 +18,15 @@ describe 'Component rendering from view', type: :view do
     expect(rendered).to have_css('.view-model .hi', text: 'Hi, Viny')
     expect(rendered).to have_css('.view-model .helper', text: 'Date: 2019-03-29')
   end
+
+  it 'has access to controller data' do
+    controller.params[:page] = 3
+    controller.params[:search] = 'ruby'
+
+    render file: 'testing/controller_data'
+
+    expect(rendered).to have_text("Current page: 3")
+    expect(rendered).to have_text("Searching for: ruby")
+
+  end
 end

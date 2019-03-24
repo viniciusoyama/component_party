@@ -98,7 +98,7 @@ And you want to render this component in your layout file.
   import_action_component 'Header', path: 'header'
 %>
 
-<%= Header(user: current_user) %>
+<%= Header(my_user: current_user) %>
 ```
 
 You can access the user attribute in your template like this:
@@ -107,17 +107,17 @@ You can access the user attribute in your template like this:
 
 ```html
 <header>
-  Hi, <%= vm.user.name %>
+  Hi, <%= my_user.name %>
 </header>
 ```
 
 ## View Models
 
-The `vm` method returns an instance of our ActionComponent::Component::ViewModel instantied with the data that you passed when calling the component in the view.
+The methods available inside the template will be those defined in your view model. If no view model is defined for your component then our ActionComponent::Component::ViewModel will be used. The view model is instantiated with the arguments that you provide when calling your component.
 
 ### ActionComponent::Component::ViewModel
 
-It takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one o them. Example:
+It takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one of them. Example:
 
 ```ruby
 vm = ActionComponent::Component::ViewModel.new(name: 'John', age: 12)
@@ -134,7 +134,9 @@ So, imagine that we want our vm to have a random_greeting method. We can can cre
 
 ## Use helpers inside your components
 
-In a component's template you will have access to a `h` or `helper` method that will be delegated to the vm instance. So you can use helpers like this:
+When initializing the view model we also provide two additionals parameters (:h and :helper) so you can have access to rails helpers.
+
+As all view model methods are available to your template your will have access to a `h` or `helper` like this:
 
 **Example of a component's templatefile**
 
@@ -154,6 +156,8 @@ In a component's template you will have access to a `h` or `helper` method that 
 </div>
 ```
 
+Your can create custom view models that inherits from ours
+
 **app/components/header/view_model.rb**
 
 ```ruby
@@ -170,13 +174,13 @@ Now the template can access the method like this:
 **app/components/header/template.html.erb**
 ```html
 <header>
-  <%= vm.random_greeting %>
+  <%= random_greeting %>
 </header>
 ```
 
 ### Use helpers inside a ViewModel
 
-A `helper` attribute is passed when instantiating a ViewModel. So if you use the default one or your ViewModel inherits from the `ActionComponent::Component::ViewModel` your can access the helpers using `h` or `helper` method.
+A `helper` and `h` attribute are passed when instantiating a ViewModel.
 
 ```ruby
 class Header::ViewModel < ActionComponent::Component::ViewModel
@@ -194,9 +198,39 @@ end
 **app/components/header/template.html.erb**
 ```html
 <header>
-  <%= vm.random_greeting %> Today is <%= formated_date %>
+  <%= random_greeting %> Today is <%= formated_date %>
 </header>
 ```
+
+
+## Access your controller in your VM or Template
+
+When rendering a component, a `c` or `controller` parameter is passed through so you can have access to all your request data inside your VM or template.
+
+**view_model**
+
+```ruby
+class ControllerData::ViewModel < ActionComponent::Component::ViewModel
+
+  def formated_page
+    "Current page: #{c.params[:page]}"
+  end
+
+  def formated_search
+    "Searching for: #{controller.params[:search]}"
+  end
+
+end
+```
+
+**template.erb**
+
+```html
+<%= formated_search %>
+
+<%= formated_page %>
+```
+
 
 # Configuration
 
