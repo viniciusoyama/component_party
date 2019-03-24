@@ -6,7 +6,7 @@ module ActionComponent
       @lookup_context = lookup_context
     end
 
-    def render(view_model_data: {})
+    def render(**view_model_data)
       renderer(view_model_data).render(component_path: @component_path)
     end
 
@@ -27,7 +27,8 @@ module ActionComponent
       begin
         vm_file_path = Pathname.new(@component_path).join(ActionComponent.configuration.view_model_file_name)
         vm_class = ActiveSupport::Inflector.camelize(vm_file_path).constantize
-      rescue NameError => ex
+      rescue NameError
+        vm_class = ActionComponent::Component::ViewModel
       end
 
       vm_class.new(**view_model_data)

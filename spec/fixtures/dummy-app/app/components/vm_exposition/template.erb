@@ -1,0 +1,12 @@
+<%
+  import_action_component 'Child', path: 'vm_exposition/child'
+%>
+
+
+<%= Child(age: '18 yo') %>
+
+<div class="parent">
+  <div class="vm-data">
+    <%= vm.name %>
+  </div>
+</div>
