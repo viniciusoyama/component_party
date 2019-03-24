@@ -4,14 +4,14 @@ describe ActionComponent::ImporterHelper do
 
 
   describe '#import_action_component' do
-    let(:mock_component_renderer) { double() }
+    let(:mock_component) { double() }
 
     let(:subject) do
       sub = Class.new do
         include ActionComponent::ImporterHelper
       end.new
 
-      allow(sub).to receive(:component_renderer).and_return(mock_component_renderer)
+      allow(sub).to receive(:create_component).and_return(mock_component)
 
       sub
     end
@@ -22,8 +22,8 @@ describe ActionComponent::ImporterHelper do
       expect(subject).to respond_to(:Header)
     end
 
-    specify "The new method calls ActionComponent::Rendered" do
-      expect(mock_component_renderer).to receive(:render).with(path: 'my_path_to_header/folder')
+    specify "The new method renders the component" do
+      expect(mock_component).to receive(:render)
 
       subject.import_action_component 'Header', path: 'my_path_to_header/folder'
 
@@ -37,7 +37,7 @@ describe ActionComponent::ImporterHelper do
     end
   end
 
-  describe '#component_renderer' do
+  describe '#component' do
     let(:mock_view_renderer) { double() }
     let(:subject) do
       sub = Class.new do
@@ -50,7 +50,7 @@ describe ActionComponent::ImporterHelper do
     end
 
     it "returns an instace of ActionComponent::Component::Renderer" do
-      expect(subject.component_renderer).to be_an_instance_of(ActionComponent::Component::Renderer)
+      expect(subject.create_component('my path')).to be_an_instance_of(ActionComponent::Component)
     end
   end
 end

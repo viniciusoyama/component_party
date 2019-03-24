@@ -10,7 +10,6 @@ module ActionComponent
 
       def render(opts)
         file_path = template_path_from_component_path(opts[:path])
-
         @view_renderer.render(rendering_context, file: file_path)
       end
 
@@ -18,7 +17,11 @@ module ActionComponent
         Class.new(ActionView::Base) do
           include ::Rails.application.routes.url_helpers
           include ::Rails.application.routes.mounted_helpers
-        end.new(@view_renderer, {}, nil)
+
+          def lol
+            "a"
+          end
+        end.new(lookup_context, {}, nil)
       end
 
       def template_path_from_component_path(component_path, template_file_name: ActionComponent.configuration.template_file_name)
