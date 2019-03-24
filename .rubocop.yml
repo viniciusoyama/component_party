@@ -10,12 +10,12 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 100
+  Max: 150
   IgnoredPatterns: ['\A#']
 
 AllCops:
   Exclude:
-    - actioncomponent.gemspec
+    - action_component.gemspec
     - 'exe/**/*'
     - 'bin/**/*'
     - 'spec/**/*'
