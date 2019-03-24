@@ -10,7 +10,7 @@ module ActionComponent
     def import_action_component(local_component_name, opts = {})
       raise "No path informed when importing component #{local_component_name}" if opts[:path].blank?
 
-      define_singleton_method(local_component_name) do
+      define_singleton_method(local_component_name) do |*args|
         create_component(opts[:path]).render
       end
     end

@@ -15,10 +15,10 @@ describe ActionComponent::Component do
     end
   end
 
-  describe '#view_model' do
+  describe '#create_view_model' do
     it "returns a default instance if custom vm file doesn't exists" do
       subject = ActionComponent::Component.new('/component_without_vm')
-      expect(subject.view_model).to be_an_instance_of(ActionComponent::Component::ViewModel)
+      expect(subject.create_view_model({})).to be_an_instance_of(ActionComponent::Component::ViewModel)
     end
 
     it "searches for a constant with the vm path" do
@@ -28,7 +28,13 @@ describe ActionComponent::Component do
 
       subject = ActionComponent::Component.new('/with_vm', lookup_context)
 
-      expect(subject.view_model).to be_an_instance_of(WithVm::ViewModel )
+      expect(subject.create_view_model({number: 3, word: 'text' })).to be_an_instance_of(WithVm::ViewModel)
+    end
+
+    it 'passes the data to the view model' do
+      expect(ActionComponent::Component::ViewModel).to receive(:new).with(number: 8, word: 'hi').and_call_original
+      subject = ActionComponent::Component.new('/component_without_vm')
+      vm = subject.create_view_model(number: 8, word: 'hi')
     end
   end
 

@@ -17,11 +17,8 @@ module ActionComponent
         end
         alias h helper
 
-        def view_model
-          @view_model
-        end
+        attr_reader :view_model
         alias vm view_model
-
       end
 
       attr_accessor :view_model
