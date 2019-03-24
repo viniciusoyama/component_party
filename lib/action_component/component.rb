@@ -1,6 +1,7 @@
 module ActionComponent
   # Represents a component with a template, style and javascript file
   class Component
+    class InvalidVMError < StandardError; end;
     class << self
       def helper_object
         @helper_object = Class.new(ActionView::Base) do
@@ -44,9 +45,15 @@ module ActionComponent
       begin
         vm_file_path = Pathname.new(@component_path).join(ActionComponent.configuration.view_model_file_name)
         vm_class = ActiveSupport::Inflector.camelize(vm_file_path).constantize
+
+        unless vm_class.ancestors.include?(ActionComponent::Component::ViewModel)
+          error_msg = "#{vm_class} cannot be used as a ViewModel. Make sure that it inherits from ActionComponent::Component::ViewModel."
+          raise ActionComponent::Component::InvalidVMError, error_msg
+        end
       rescue NameError
         vm_class = ActionComponent::Component::ViewModel
       end
+
 
       vm_class.new(**view_model_data.merge(view_model_default_data))
     end

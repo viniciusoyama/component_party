@@ -20,6 +20,14 @@ describe ActionComponent::Component do
   end
 
   describe '#create_view_model' do
+    it 'raises an error if VM does not inherits from ActionComponent::Component::ViewModel' do
+      subject = ActionComponent::Component.new('/invalid_vm')
+
+      expect {
+        subject.create_view_model()
+      }.to raise_error(ActionComponent::Component::InvalidVMError, 'InvalidVm::ViewModel cannot be used as a ViewModel. Make sure that it inherits from ActionComponent::Component::ViewModel.')
+    end
+
     it "returns a default instance if custom vm file doesn't exists" do
       subject = ActionComponent::Component.new('/component_without_vm')
       expect(subject.create_view_model({})).to be_an_instance_of(ActionComponent::Component::ViewModel)
@@ -32,11 +40,7 @@ describe ActionComponent::Component do
     end
 
     it "searches for a constant with the vm path" do
-      lookup_context = ActionView::LookupContext.new(
-        [fixture_path('/components')]
-      )
-
-      subject = ActionComponent::Component.new('/with_vm', lookup_context)
+      subject = ActionComponent::Component.new('/with_vm')
 
       expect(subject.create_view_model({number: 3, word: 'text' })).to be_an_instance_of(WithVm::ViewModel)
     end
