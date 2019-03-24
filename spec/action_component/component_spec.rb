@@ -14,4 +14,11 @@ describe ActionComponent::Component do
       subject.render()
     end
   end
+
+  describe '#lookup_context' do
+    it "setups a LookupContext according to the gem configuration" do
+      allow(ActionComponent.configuration).to receive(:components_path).and_return('mockpath')
+      expect(subject.lookup_context.view_paths.first.to_s).to match(/mockpath$/)
+    end
+  end
 end

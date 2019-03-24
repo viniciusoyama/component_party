@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 describe ActionComponent::Component::Renderer do
+  subject do
+    ActionComponent::Component::Renderer.new(ActionView::LookupContext.new(
+      [fixture_path('/components')]
+    ))
+  end
 
   describe '#render' do
-    subject do
-      ActionComponent::Component::Renderer.new(ActionView::LookupContext.new(
-        [fixture_path('/components')]
-      ))
-    end
 
     it "renders the component template" do
       rendered = subject.render(path: '/user-list')
@@ -26,10 +26,4 @@ describe ActionComponent::Component::Renderer do
   end
 
 
-  describe '#lookup_context' do
-    it "setups a LookupContext according to the gem configuration" do
-      allow(ActionComponent.configuration).to receive(:components_path).and_return('mockpath')
-      expect(subject.lookup_context.view_paths.first.to_s).to match(/mockpath$/)
-    end
-  end
 end

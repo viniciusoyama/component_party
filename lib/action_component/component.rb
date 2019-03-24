@@ -12,7 +12,16 @@ module ActionComponent
     private
 
     def renderer
-      ActionComponent::Component::Renderer.new
+      ActionComponent::Component::Renderer.new(lookup_context)
+    end
+
+    def lookup_context
+      ActionView::LookupContext.new(
+        [
+          ActionComponent.configuration.components_path,
+          Rails.root.join(ActionComponent.configuration.components_path)
+        ]
+      )
     end
   end
 end

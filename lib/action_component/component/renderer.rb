@@ -18,13 +18,8 @@ module ActionComponent
         alias h helper
       end
 
-      def initialize(lookup_context = nil)
-        @lookup_context = lookup_context || ActionView::LookupContext.new(
-          [
-            ActionComponent.configuration.components_path,
-            Rails.root.join(ActionComponent.configuration.components_path)
-          ]
-        )
+      def initialize(lookup_context)
+        @lookup_context = lookup_context
       end
 
       def render(opts)
