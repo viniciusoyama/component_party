@@ -18,17 +18,19 @@ module ActionComponent
       end
     end
 
-    def initialize(component_path, lookup_context = nil)
+    attr_reader :view_model_data
+    def initialize(component_path: component_path, lookup_context: nil, view_model_data: {})
       @component_path = component_path.to_s.gsub(%r{^/}, '')
       @lookup_context = lookup_context
+      @view_model_data = view_model_data
     end
 
-    def render(**view_model_data)
-      renderer(view_model_data).render(component_path: @component_path)
+    def render
+      renderer.render(component_path: @component_path)
     end
 
-    def renderer(view_model_data)
-      ActionComponent::Component::Renderer.new(lookup_context, create_view_model(view_model_data))
+    def renderer
+      ActionComponent::Component::Renderer.new(lookup_context, create_view_model)
     end
 
     def lookup_context
@@ -39,7 +41,7 @@ module ActionComponent
       )
     end
 
-    def create_view_model(**view_model_data)
+    def create_view_model
       vm_class = ActionComponent::Component::ViewModel
 
       begin

@@ -16,6 +16,10 @@ describe ActionComponent::ImporterHelper do
       sub
     end
 
+    before(:each) do
+      allow(mock_component).to receive(:render)
+    end
+
     describe 'generated component method' do
       it "creates a method with correct name" do
         subject.import_action_component 'Header', path: 'my_path_to_header/folder'
@@ -32,7 +36,7 @@ describe ActionComponent::ImporterHelper do
       end
 
       it "Passes the arguments" do
-        expect(mock_component).to receive(:render).with(a: 2)
+        expect(subject).to receive(:create_component).with('my_path_to_header/folder', { a: 2 })
 
         subject.import_action_component 'Header', path: 'my_path_to_header/folder'
 
@@ -46,8 +50,10 @@ describe ActionComponent::ImporterHelper do
       end
     end
   end
-  describe '#component' do
+
+  describe '#create_component' do
     let(:mock_view_renderer) { double() }
+
     let(:subject) do
       sub = Class.new do
         include ActionComponent::ImporterHelper
@@ -59,7 +65,7 @@ describe ActionComponent::ImporterHelper do
     end
 
     it "returns an instace of ActionComponent::Component::Renderer" do
-      expect(subject.create_component('my path')).to be_an_instance_of(ActionComponent::Component)
+      expect(subject.create_component('my path', {})).to be_an_instance_of(ActionComponent::Component)
     end
   end
 end

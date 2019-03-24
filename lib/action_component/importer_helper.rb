@@ -11,12 +11,12 @@ module ActionComponent
       raise "No path informed when importing component #{local_component_name}" if opts[:path].blank?
 
       define_singleton_method(local_component_name) do |**args|
-        create_component(opts[:path]).render(**args)
+        create_component(opts[:path], args).render
       end
     end
 
-    def create_component(component_path)
-      ActionComponent::Component.new(component_path)
+    def create_component(component_path, view_model_data)
+      ActionComponent::Component.new(component_path: component_path, view_model_data: view_model_data)
     end
   end
 end
