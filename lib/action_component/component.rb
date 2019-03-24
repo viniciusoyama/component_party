@@ -10,6 +10,7 @@ module ActionComponent
     end
 
     private
+
     def renderer
       ActionComponent::Component::Renderer.new
     end
