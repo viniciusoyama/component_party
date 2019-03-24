@@ -1,23 +1,22 @@
 Gem::Specification.new do |s|
   s.name        = 'actioncomponent'
-  s.version     = '0.0.1'
+  s.version     = '0.0.3'
   s.date        = '2019-03-21'
-  s.summary     = "Stop using views: frontend components architecture for Ruby on Rails"
-  s.description = "Stop using views: frontend components architecture for Ruby on Rails"
-  s.authors     = ["Vinícius Oyama"]
+  s.summary     = 'Stop using views: frontend components architecture for Ruby on Rails'
+  s.description = 'Stop using views: frontend components architecture for Ruby on Rails'
+  s.authors     = ['Vinícius Oyama']
   s.email       = 'contact@viniciusoyama.com'
-  s.files       = ["lib/action_component.rb"]
+  s.files       = ['lib/actioncomponent.rb']
   s.homepage    =
     'http://rubygems.org/gems/actioncomponent'
-  s.license       = 'MIT'
+  s.license = 'MIT'
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
   s.add_dependency 'rails', '>= 4.0.0'
 
-
   # Quality Control
-  s.add_development_dependency 'rubocop'
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rubocop'
   s.add_development_dependency 'simplecov'
 
   # Debugging
@@ -27,9 +26,8 @@ Gem::Specification.new do |s|
   # for testing a gem with a rails app (controller specs)
   # https://codingdaily.wordpress.com/2011/01/14/test-a-gem-with-the-rails-3-stack/
   s.add_development_dependency 'bundler'
-  s.add_development_dependency 'rails', '> 4.0'
-  s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'capybara'
-
+  s.add_development_dependency 'rails', '> 4.0'
+  s.add_development_dependency 'rspec-rails'
+  s.add_development_dependency 'sqlite3'
 end

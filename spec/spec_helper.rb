@@ -6,7 +6,7 @@ require 'pry-byebug' # binding.pry to debug!
 require 'awesome_print'
 
 # Our gem
-require 'action_component' # and any other gems you need
+require 'actioncomponent' # and any other gems you need
 
 # Load support files
 Dir[File.dirname(__FILE__) + '/support/**/*.rb'].each do |file|
