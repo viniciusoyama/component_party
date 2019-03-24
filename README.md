@@ -75,3 +75,22 @@ end
 # ...
 
 ```
+
+
+# Configuration
+
+You can change some parameters by creating a initializer on your app
+
+**config/initializers/action_component.rb**
+
+```ruby
+
+ActionComponent.configure do |config|
+  # Folder path to look for components
+  config.components_path = 'app/components'
+
+  # Default name for the html/erb/slim/etc template file inside the component folder
+  config.template_file_name = 'template'
+end
+
+```
