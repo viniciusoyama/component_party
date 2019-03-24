@@ -3,7 +3,6 @@ module ActionComponent
   class Component
     class ViewModel
       def initialize(**args)
-        puts args
       end
     end
   end

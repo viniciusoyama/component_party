@@ -16,27 +16,36 @@ describe ActionComponent::ImporterHelper do
       sub
     end
 
-    it "generates a new method with the name that was given" do
-      subject.import_action_component 'Header', path: 'my_path_to_header/folder'
+    describe 'generated component method' do
+      it "creates a method with correct name" do
+        subject.import_action_component 'Header', path: 'my_path_to_header/folder'
 
-      expect(subject).to respond_to(:Header)
-    end
+        expect(subject).to respond_to(:Header)
+      end
 
-    specify "The new method renders the component" do
-      expect(mock_component).to receive(:render)
+      it "renders the component" do
+        expect(mock_component).to receive(:render)
 
-      subject.import_action_component 'Header', path: 'my_path_to_header/folder'
+        subject.import_action_component 'Header', path: 'my_path_to_header/folder'
 
-      subject.Header()
-    end
+        subject.Header()
+      end
 
-    it 'raises if there is no path' do
-      expect {
-        subject.import_action_component 'Header'
-      }.to raise_error('No path informed when importing component Header')
+      it "Passes the arguments" do
+        expect(mock_component).to receive(:render).with(a: 2)
+
+        subject.import_action_component 'Header', path: 'my_path_to_header/folder'
+
+        subject.Header(a: 2)
+      end
+
+      it 'raises if there is no path' do
+        expect {
+          subject.import_action_component 'Header'
+        }.to raise_error('No path informed when importing component Header')
+      end
     end
   end
-
   describe '#component' do
     let(:mock_view_renderer) { double() }
     let(:subject) do
