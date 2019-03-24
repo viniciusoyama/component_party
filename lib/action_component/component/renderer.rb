@@ -6,29 +6,38 @@ module ActionComponent
       class ViewContext
         include ActionComponent::ImporterHelper
 
-        def initialize(lookup_context, helper_object)
+        def initialize(lookup_context, helper_object, view_model)
           @lookup_context = lookup_context
           @helper_object = helper_object
+          @view_model = view_model
         end
 
         def helper
           @helper_object
         end
-
         alias h helper
+
+        def view_model
+          @view_model
+        end
+        alias vm view_model
+
       end
 
-      def initialize(lookup_context)
+      attr_accessor :view_model
+
+      def initialize(lookup_context, view_model = ActionComponent::Component::ViewModel.new)
         @lookup_context = lookup_context
+        @view_model = view_model
       end
 
       def render(component_path:)
         file_path = template_path_from_component_path(component_path)
-        super(view_context, file: file_path)
+        super(create_view_context, file: file_path)
       end
 
-      def view_context
-        ViewContext.new(lookup_context, helper_object)
+      def create_view_context
+        ViewContext.new(lookup_context, helper_object, view_model)
       end
 
       def template_path_from_component_path(component_path, template_file_name: ActionComponent.configuration.template_file_name)

@@ -14,13 +14,20 @@ describe ActionComponent::Component::Renderer do
     end
   end
 
-  describe '#view_context' do
-    let(:context) { subject.view_context }
+  describe '#create_view_context' do
+    let(:context) { subject.create_view_context }
 
     it 'exposes helpers' do
       expect(context.helper).to respond_to(:l)
       expect(context.h).to respond_to(:users_path)
       expect(context.helper).to respond_to(:t)
+    end
+
+    context 'exposing view model' do
+      it 'exposes ActionComponent::ViewModel by default' do
+        expect(context.vm).to be_an_instance_of(ActionComponent::Component::ViewModel)
+        expect(context.view_model).to be_an_instance_of(ActionComponent::Component::ViewModel)
+      end
     end
   end
 

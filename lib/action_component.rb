@@ -1,5 +1,6 @@
 require 'action_component/importer_helper'
 require 'action_component/component'
+require 'action_component/component/view_model'
 require 'action_component/component/renderer'
 require 'action_component/railtie'
 
