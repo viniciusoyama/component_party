@@ -51,12 +51,6 @@ module ActionComponent
       vm_class.new(**view_model_data.merge(self.class.helper_vm_params))
     end
 
-    def vm_class
-      vm_file_path = Pathname.new(@component_path).join(ActionComponent.configuration.view_model_file_name)
-      ActiveSupport::Inflector.camelize(vm_file_path)
-      vm_file_path.gsub('.rb', '').split('/').map(&:capitalize).join('::').constantize.new
-    end
-
     def full_component_path
       Rails.root.join(ActionComponent.configuration.components_path)
     end
