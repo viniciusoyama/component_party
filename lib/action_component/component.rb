@@ -18,8 +18,9 @@ module ActionComponent
       end
     end
 
-    attr_reader :view_model_data
-    def initialize(component_path: , lookup_context: nil, view_model_data: {})
+    attr_reader :view_model_data, :component_path
+
+    def initialize(component_path:, lookup_context: nil, view_model_data: {})
       @component_path = component_path.to_s.gsub(%r{^/}, '')
       @lookup_context = lookup_context
       @view_model_data = view_model_data
@@ -45,13 +46,7 @@ module ActionComponent
       vm_class = ActionComponent::Component::ViewModel
 
       begin
-        vm_file_path = Pathname.new(@component_path).join(ActionComponent.configuration.view_model_file_name)
-        vm_class = ActiveSupport::Inflector.camelize(vm_file_path).constantize
-
-        unless vm_class.ancestors.include?(ActionComponent::Component::ViewModel)
-          error_msg = "#{vm_class} cannot be used as a ViewModel. Make sure that it inherits from ActionComponent::Component::ViewModel."
-          raise ActionComponent::Component::InvalidVMError, error_msg
-        end
+        vm_class = find_custom_vm_class!
       rescue NameError
         vm_class = ActionComponent::Component::ViewModel
       end
@@ -67,6 +62,20 @@ module ActionComponent
 
     def full_component_path
       Rails.root.join(ActionComponent.configuration.components_path)
+    end
+
+    private
+
+    def find_custom_vm_class!
+      vm_file_path = Pathname.new(component_path).join(ActionComponent.configuration.view_model_file_name)
+      vm_class = ActiveSupport::Inflector.camelize(vm_file_path).constantize
+
+      unless vm_class.ancestors.include?(ActionComponent::Component::ViewModel)
+        error_msg = "#{vm_class} cannot be used as a ViewModel. Make sure that it inherits from ActionComponent::Component::ViewModel."
+        raise ActionComponent::Component::InvalidVMError, error_msg
+      end
+
+      vm_class
     end
   end
 end
