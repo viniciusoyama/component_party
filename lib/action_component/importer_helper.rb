@@ -16,7 +16,7 @@ module ActionComponent
     end
 
     def component_renderer
-      ActionComponent::ComponentRenderer.new
+      ActionComponent::Component::Renderer.new
     end
   end
 end

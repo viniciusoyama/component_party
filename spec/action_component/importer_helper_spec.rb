@@ -49,8 +49,8 @@ describe ActionComponent::ImporterHelper do
       sub
     end
 
-    it "returns an instace of ActionComponent::ComponentRenderer" do
-      expect(subject.component_renderer).to be_an_instance_of(ActionComponent::ComponentRenderer)
+    it "returns an instace of ActionComponent::Component::Renderer" do
+      expect(subject.component_renderer).to be_an_instance_of(ActionComponent::Component::Renderer)
     end
   end
 end

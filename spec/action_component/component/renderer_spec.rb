@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-describe ActionComponent::ComponentRenderer do
+describe ActionComponent::Component::Renderer do
 
   describe '#render' do
     subject do
       view_renderer = ActionView::Renderer.new(ActionView::LookupContext.new(
         [fixture_path('/components')]
       ))
-      ActionComponent::ComponentRenderer.new(view_renderer)
+      ActionComponent::Component::Renderer.new(view_renderer)
     end
 
     it "renders the component template" do
