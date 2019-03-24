@@ -29,22 +29,6 @@ describe ActionComponent::Component::Renderer do
     end
   end
 
-  describe '#create_view_context' do
-    let(:context) { subject.create_view_context }
-
-    it 'exposes helpers' do
-      expect(context.helper).to respond_to(:l)
-      expect(context.helper).to respond_to(:t)
-    end
-
-    context 'exposing view model' do
-      it 'exposes ActionComponent::ViewModel by default' do
-        expect(context.vm).to be(view_model)
-        expect(context.view_model).to be(view_model)
-      end
-    end
-  end
-
   describe '#template_path_from_component_path' do
     it "Joins the component path with the default template file name" do
       allow(ActionComponent.configuration).to receive(:template_file_name).and_return('templatefile')
