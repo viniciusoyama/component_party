@@ -1,13 +1,13 @@
 <div class="child">
   <div class="date">
-    <%= l(Date.new(2019, 01, 03)) %>
+    <%= helper.l(Date.new(2019, 01, 03)) %>
   </div>
 
   <div class="routes">
-    <%= users_path %>
+    <%= h.users_path %>
   </div>
 
   <div class="translation">
-    <%= t('hello')%>
+    <%= h.t('hello')%>
   </div>
 </div>

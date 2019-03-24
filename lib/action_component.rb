@@ -1,5 +1,7 @@
 require 'action_component/importer_helper'
-require 'action_component/component_renderer'
+require 'action_component/component'
+require 'action_component/component/view_model'
+require 'action_component/component/renderer'
 require 'action_component/railtie'
 
 module ActionComponent
@@ -9,10 +11,12 @@ module ActionComponent
   class Configuration
     attr_accessor :components_path
     attr_accessor :template_file_name
+    attr_accessor :view_model_file_name
 
     def initialize
       @components_path = 'app/components'
       @template_file_name = 'template'
+      @view_model_file_name = 'view_model'
     end
   end
 
