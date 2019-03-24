@@ -22,8 +22,8 @@ module ActionComponent
         @lookup_context = lookup_context
       end
 
-      def render(opts)
-        file_path = template_path_from_component_path(opts[:path])
+      def render(component_path:)
+        file_path = template_path_from_component_path(component_path)
         super(view_context, file: file_path)
       end
 

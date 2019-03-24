@@ -6,10 +6,8 @@ module ActionComponent
     end
 
     def render
-      renderer.render(path: @component_path)
+      renderer.render(component_path: @component_path)
     end
-
-    private
 
     def renderer
       ActionComponent::Component::Renderer.new(lookup_context)

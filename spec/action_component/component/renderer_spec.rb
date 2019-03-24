@@ -8,10 +8,19 @@ describe ActionComponent::Component::Renderer do
   end
 
   describe '#render' do
-
     it "renders the component template" do
-      rendered = subject.render(path: '/user-list')
+      rendered = subject.render(component_path: '/user-list')
       expect(rendered).to include('Listing Users')
+    end
+  end
+
+  describe '#view_context' do
+    let(:context) { subject.view_context }
+
+    it 'exposes helpers' do
+      expect(context.helper).to respond_to(:l)
+      expect(context.h).to respond_to(:users_path)
+      expect(context.helper).to respond_to(:t)
     end
   end
 
