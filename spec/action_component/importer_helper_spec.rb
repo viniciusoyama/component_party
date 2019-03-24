@@ -9,6 +9,9 @@ describe ActionComponent::ImporterHelper do
     let(:subject) do
       sub = Class.new do
         include ActionComponent::ImporterHelper
+
+        def controller
+        end
       end.new
 
       allow(sub).to receive(:create_component).and_return(mock_component)
@@ -57,6 +60,9 @@ describe ActionComponent::ImporterHelper do
     let(:subject) do
       sub = Class.new do
         include ActionComponent::ImporterHelper
+
+        def controller
+        end
       end.new
 
       allow(sub).to receive(:view_renderer).and_return(mock_view_renderer)
@@ -66,6 +72,13 @@ describe ActionComponent::ImporterHelper do
 
     it "returns an instace of ActionComponent::Component::Renderer" do
       expect(subject.create_component('my path', {})).to be_an_instance_of(ActionComponent::Component)
+    end
+
+    it "passes the controller as VM data" do
+      mock_controller = double
+      allow(subject).to receive(:controller).and_return(mock_controller)
+      expect(ActionComponent::Component).to receive(:new).with(component_path: 'my path', view_model_data: hash_including(name: 'ze', controller: mock_controller, c: mock_controller))
+      subject.create_component('my path', { name: 'ze' })
     end
   end
 end
