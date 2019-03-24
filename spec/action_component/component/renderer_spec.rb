@@ -4,10 +4,9 @@ describe ActionComponent::Component::Renderer do
 
   describe '#render' do
     subject do
-      view_renderer = ActionView::Renderer.new(ActionView::LookupContext.new(
+      ActionComponent::Component::Renderer.new(ActionView::LookupContext.new(
         [fixture_path('/components')]
       ))
-      ActionComponent::Component::Renderer.new(view_renderer)
     end
 
     it "renders the component template" do
