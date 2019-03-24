@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
-  s.name        = 'action_component'
-  s.version     = '0.0.0'
+  s.name        = 'actioncomponent'
+  s.version     = '0.0.1'
   s.date        = '2019-03-21'
   s.summary     = "Stop using views: frontend components architecture for Ruby on Rails"
   s.description = "Stop using views: frontend components architecture for Ruby on Rails"
