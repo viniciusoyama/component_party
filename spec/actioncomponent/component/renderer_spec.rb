@@ -27,6 +27,16 @@ describe ActionComponent::Component::Renderer do
       rendered = subject.render(component_path: '/user_list')
       expect(rendered).to include('Listing Users')
     end
+
+    it "Applies a div namespacing the component" do
+      rendered = subject.render(component_path: '/css_namespace/nesting')
+      expect(rendered).to include('CSS')
+      html = Nokogiri(rendered)
+      expect(html.children.count).to be(1)
+      wrapper = html.children.first
+      expect(wrapper.attr('class')).to eq('action-component')
+      expect(wrapper.attr('data-action-component-id')).to eq('css_namespace-nesting')
+    end
   end
 
   describe '#template_path_from_component_path' do

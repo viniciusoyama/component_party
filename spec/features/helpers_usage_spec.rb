@@ -4,7 +4,6 @@ require 'rails_helper'
 describe 'Helpers methods', type: :view do
   it 'Exposes rails view helpers inside a componet' do
     render file: 'testing/helpers'
-
     expect(rendered).to have_css('.parent > .date', text: '2019-01-03')
     expect(rendered).to have_css('.parent > .translation', text: 'Hello world')
   end
