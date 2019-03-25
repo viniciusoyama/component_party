@@ -1,6 +1,6 @@
 env:
   global:
-    - CC_TEST_REPORTER_ID=3155042648b3cc74c8af8a1713df60818092046d8b395fdf29b4b1c00db7c792
+    - CC_TEST_REPORTER_ID=a9aae2aa791f2f8d488953c079f088ef1bdb1388afdbdb3d370330151c5a2926
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 
 language: ruby

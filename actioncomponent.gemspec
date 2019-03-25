@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.email       = 'contact@viniciusoyama.com'
   s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   s.homepage    =
-    'http://rubygems.org/gems/actioncomponent'
+    'https://github.com/viniciusoyama/actioncomponent'
   s.license = 'MIT'
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
