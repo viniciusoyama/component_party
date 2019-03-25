@@ -238,6 +238,39 @@ end
 <%= formated_page %>
 ```
 
+# Style namespacing
+
+Each rendered component will be wrapped inside a div with a dynamic data attribute according to the component path. This means that you can create custom css for each component. Example:
+
+
+```
+app
+├── components
+│   └── user_page
+│       └── header
+│           └── template.html.erb
+```
+
+If we render the header inside a component it will generate a HTML like this
+
+```html
+
+<div class='action-component' data-action-component-id='user_page-header'>
+  ...
+  ...
+</div>
+
+```
+
+Then you can customize the component with the following css:
+
+```css
+[data-action-component-id=project-index] {
+  background: red;
+}
+```
+
+
 
 # Configuration
 
