@@ -1,7 +1,7 @@
 module ActionComponent
   # Renders a given component
   class Component
-    class Renderer < ActionView::Renderer
+    class Renderer < ActionView::TemplateRenderer
       class ComponentTemplateFileNotFound < StandardError; end
 
       attr_reader :view_model
@@ -13,7 +13,8 @@ module ActionComponent
 
       def render(component_path:)
         file_path = template_path_from_component_path(component_path)
-        super(view_model, file: file_path)
+        rendered = super(view_model, file: file_path)
+        rendered
       end
 
       def template_path_from_component_path(component_path, template_file_name: ActionComponent.configuration.template_file_name)
