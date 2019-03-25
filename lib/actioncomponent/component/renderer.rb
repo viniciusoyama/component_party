@@ -23,8 +23,8 @@ module ActionComponent
       end
 
       def apply_html_namespacing(raw_html, component_path)
-        component_id = component_path.gsub(/^\//, '').gsub("/", '-')
-        "<div class='action-component' data-action-component-id='#{component_id}'>" + raw_html + "</div>".html_safe
+        component_id = component_path.gsub(%r{^/}, '').tr('/', '-')
+        "<div class='action-component' data-action-component-id='#{component_id}'>" + raw_html + '</div>'.html_safe
       end
     end
   end
