@@ -1,4 +1,4 @@
-# Welcome to actioncomponent gem
+Â# Welcome to actioncomponent gem
 
 [![Travis](https://travis-ci.org/viniciusoyama/action_component.svg?branch=master)](https://travis-ci.org/viniciusoyama/action_component)
 [![Code Climate](https://codeclimate.com/github/viniciusoyama/action_component/badges/gpa.svg)](https://codeclimate.com/github/viniciusoyama/action_component)
@@ -24,8 +24,11 @@ app
 │   └── user
 │       └── filter
 │           └── template.html.erb
+│           └── view_model.rb
+│           └── style.sass
 │       └── list
 │           └── template.html.erb
+│           └── style.sass
 ```
 
 
@@ -268,6 +271,23 @@ Then you can customize the component with the following css:
 [data-action-component-id=project-index] {
   background: red;
 }
+```
+
+## Where do I put my CSS files?
+
+Where it belongs: in your component folder. It doens't matter the name or de number of css/sass/less files that you have... Just don't forget to namespace it!
+
+Also in your application.css file you should require all the css from the component folder. You can do that with a relative `require_tree`. Like this:
+
+**application.sass**
+
+```sass
+//*=require_tree ../../../components
+@import "fullcalendar.min"
+@import "bootstrap"
+@import "datepicker"
+
+// ...
 ```
 
 
