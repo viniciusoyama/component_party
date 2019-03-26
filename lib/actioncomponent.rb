@@ -2,6 +2,7 @@ require 'actioncomponent/importer_helper'
 require 'actioncomponent/component'
 require 'actioncomponent/component/view_model'
 require 'actioncomponent/component/renderer'
+require 'actioncomponent/controller/rendering'
 
 module ActionComponent
   # Configuration class for ActionComponent
