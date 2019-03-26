@@ -1,4 +1,7 @@
-module ActionComponent
+# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/LineLength
+module ActionComponent #:nodoc:
   # Renders a given component
   module Controller
     module Rendering
@@ -18,7 +21,7 @@ module ActionComponent
                    options[:component]
                  else
                    raise "Wrong value for 'component' key while calling render method. Argument class is #{options[:component].class}. Only String or true values are expected."
-          end
+                 end
 
           options[:view_model_data] ||= {}
           options[:view_model_data] = { c: self, controller: self }.merge(options[:view_model_data])
@@ -33,3 +36,5 @@ module ActionComponent
     end
   end
 end
+
+# rubocop:enable all
