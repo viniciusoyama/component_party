@@ -13,19 +13,19 @@ module ActionComponent
       def render_to_body(options = {})
         if options.key?(:component)
           path = if options[:component] == true
-            Pathname.new(options[:prefixes].first.to_s).join(options[:template]).to_s
-          elsif options[:component].is_a?(String)
-            options[:component]
-          else
-            raise "Wrong value for 'component' key while calling render method. Argument class is #{options[:component].class}. Only String or true values are expected."
+                   Pathname.new(ActionComponent.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
+                 elsif options[:component].is_a?(String)
+                   options[:component]
+                 else
+                   raise "Wrong value for 'component' key while calling render method. Argument class is #{options[:component].class}. Only String or true values are expected."
           end
 
           options[:view_model_data] ||= {}
           options[:view_model_data] = { c: self, controller: self }.merge(options[:view_model_data])
-          ActionComponent::Component.new({
+          ActionComponent::Component.new(
             component_path: path,
             view_model_data: options[:view_model_data]
-          }).render
+          ).render
         else
           super
         end

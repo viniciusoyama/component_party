@@ -30,7 +30,8 @@ describe ActionComponent::Controller::Rendering do
       end
 
       it 'Uses the view detected by rails as component' do
-        expect(ActionComponent::Component).to receive(:new).with(hash_including(component_path: 'devise/sessions/new'))
+        expect(ActionComponent.configuration).to receive(:component_folder_for_actions).and_return('prependpath')
+        expect(ActionComponent::Component).to receive(:new).with(hash_including(component_path: 'prependpath/devise/sessions/new'))
         rails_options = {
           :prefixes=> ["devise/sessions", "devise", "application"],
           :template=> "new"
