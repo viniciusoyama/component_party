@@ -79,13 +79,20 @@ app
 
 ```ruby
 
-# ...
-# TODO
-# ...
+class ClientsController < ApplicationController
+
+  def index
+    # Will search in
+    # components/pages/clients/index
+    render component: true, view_model_data: { clients: Client.all }
+  end
+
+end
+
 
 ```
 
-## Pass data to your components
+## Pass data to your components in your templates
 
 When rendering your can pass data in a hash/named parameters format. The data will be exposed in your template through a view model.  
 
@@ -241,6 +248,31 @@ end
 <%= formated_page %>
 ```
 
+# Rendering from a controller
+
+When you are inside an action you can render a component using the following syntax:
+
+```ruby
+render(component: 'my/component/path', view_model_data: { new_arg: 2, more_arg: 'text'})
+```
+
+If you want to render the default component for an given action (just like rails automatically renders you views) you can write:
+
+
+```ruby
+class ClientsController < ApplicationController
+
+  def index
+    # Will search in
+    # components/pages/clients/index
+    render component: true, view_model_data: { clients: Client.all }
+  end
+
+end
+```
+
+Note that, different to rails, we will add a 'pages' folder at the beginning of your path. This is done so you can can have isolated components that represents each action in a isolated namespace.
+
 # Style namespacing
 
 Each rendered component will be wrapped inside a div with a dynamic data attribute according to the component path. This means that you can create custom css for each component. Example:
@@ -310,6 +342,10 @@ ActionComponent.configure do |config|
 
   # Default name for the view model file inside the component folder
   config.view_model_file_name = 'view_model'
+
+  # Default folder path inside the components folder to look for when
+  # rendering the default component for an action inside a controller
+  config.component_folder_for_actions = 'pages'
 end
 
 ```
