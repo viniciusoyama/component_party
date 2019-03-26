@@ -25,5 +25,11 @@ describe ActionComponent do
         expect(ActionComponent.configuration.view_model_file_name).to eq('view_model')
       end
     end
+
+    describe 'component_folder_for_actions configuration' do
+      specify 'it has pages as default' do
+        expect(ActionComponent.configuration.component_folder_for_actions).to eq('pages')
+      end
+    end
   end
 end

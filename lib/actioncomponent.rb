@@ -2,6 +2,7 @@ require 'actioncomponent/importer_helper'
 require 'actioncomponent/component'
 require 'actioncomponent/component/view_model'
 require 'actioncomponent/component/renderer'
+require 'actioncomponent/controller/rendering'
 
 module ActionComponent
   # Configuration class for ActionComponent
@@ -11,11 +12,13 @@ module ActionComponent
     attr_accessor :components_path
     attr_accessor :template_file_name
     attr_accessor :view_model_file_name
+    attr_accessor :component_folder_for_actions
 
     def initialize
       @components_path = 'app/components'
       @template_file_name = 'template'
       @view_model_file_name = 'view_model'
+      @component_folder_for_actions = 'pages'
     end
   end
 
