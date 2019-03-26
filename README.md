@@ -79,12 +79,12 @@ app
 
 ```ruby
 
-class ClientsController < ApplicationController
+class UsersController < ApplicationController
 
   def index
     # Will search in
-    # components/pages/clients/index
-    render component: true, view_model_data: { clients: Client.all }
+    # components/pages/users/index
+    render component: true, view_model_data: { users: User.all }
   end
 
 end
