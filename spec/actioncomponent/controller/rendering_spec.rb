@@ -43,6 +43,21 @@ describe ActionComponent::Controller::Rendering do
         expect(mock_controller.render_to_body(component: 'path')).to eq("component-rendered")
       end
 
+      it "Passes the current controller as view model data" do
+        expect(ActionComponent::Component).to receive(:new).with(hash_including(view_model_data: hash_including({ c: mock_controller, controller: mock_controller })))
+        mock_controller.render_to_body(component: 'path')
+      end
+
+      it "Passes custom view model data" do
+        expect(ActionComponent::Component).to receive(:new).with(hash_including(view_model_data: hash_including({
+          c: mock_controller,
+          controller: mock_controller,
+          new_arg: 2,
+          more_arg: 'text'
+        })))
+        mock_controller.render_to_body(component: 'path', view_model_data: { new_arg: 2, more_arg: 'text'})
+      end
+
       it 'Raises an error if component value is invalid' do
         expect {
           mock_controller.render_to_body(component: 342)
