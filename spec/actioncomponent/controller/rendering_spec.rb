@@ -61,8 +61,8 @@ describe ActionComponent::Controller::Rendering do
 
       it 'Raises an error if component value is invalid' do
         expect {
-          mock_controller.render_to_body(component: 342)
-        }.to raise_error("Wrong value for 'component' key while calling render method. Argument class is Integer. Only String or true values are expected.")
+          mock_controller.render_to_body(component: Object.new)
+        }.to raise_error("Wrong value for 'component' key while calling render method. Argument class is Object. Only String or true values are expected.")
       end
     end
 
