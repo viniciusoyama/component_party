@@ -35,7 +35,7 @@ describe ActionComponent::Component::Renderer do
       expect(html.children.count).to be(1)
       wrapper = html.children.first
       expect(wrapper.attr('class')).to eq('action-component')
-      expect(wrapper.attr('data-action-component-id')).to eq('css_namespace-nesting')
+      expect(wrapper.attr('data-action-component-path')).to eq('css_namespace-nesting')
     end
   end
 
