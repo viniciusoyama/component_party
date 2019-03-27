@@ -8,6 +8,8 @@ Frontend components for Ruby on Rails: group your view logic, html, css and java
 
 # How to use?
 
+Add to your:
+
 **Gemfile**
 ```ruby
 gem 'actioncomponent'
@@ -16,7 +18,7 @@ gem 'actioncomponent'
 # What do you get?
 
 ## Organize your frontend code
-Your can group your frontend stuff by domain and organize the UI of your Rails app like this:
+Your can stop using rails views and organize your frontend by components with isolated logic and css:
 
 ```
 app
@@ -32,7 +34,7 @@ app
 ```
 
 
-And, in your views, or in your components, your can render it!
+You can render any component inside a template file (be it a view or another component)!
 
 **app/view/users/index.html.erb**
 
@@ -47,32 +49,36 @@ And, in your views, or in your components, your can render it!
 <%= List(users: @users) %>
 ```
 
-Or, you can completely drop your view and tell your controller to render a User Index Compoment
+If you want to stop using views, just tell the controller to render your component: Compoment
 
 ```
 app
-├── components
+├── components/pages
 │   └── user
 │       └── filter
-│           └── template.html.erb
+│           └── template.erb
 │       └── list
-│           └── template.html.erb
+│           └── template.slim
+│           └── view_model.rb
 │       └── index
-│           └── template.html.erb
+│           └── style.sass
+│           └── template.erb
 ```
 
 
-**app/components/user/index/template.html.erb**
+Yes! You can use your processor to render a component template or css file.
+
+**app/components/pages/users/index/template.html.erb**
 
 ```html
 <%
-  import_action_component 'Filter', path: 'user/filter'
-  import_action_component 'List', path: 'user/list'
+  import_action_component 'Filter', path: 'pages/users/filter'
+  import_action_component 'List', path: 'pages/users/list'
 %>
 
 <%= Filter() %>
 
-<%= List(users: @users) %>
+<%= List(users: users) %>
 ```
 
 **app/controllers/users_controller.rb**
@@ -82,14 +88,10 @@ app
 class UsersController < ApplicationController
 
   def index
-    # Will search in
-    # components/pages/users/index
     render component: true, view_model_data: { users: User.all }
   end
 
 end
-
-
 ```
 
 ## Pass data to your components in your templates
@@ -120,17 +122,25 @@ And you want to render this component in your layout file.
 
 You can access the user attribute in your template like this:
 
-**app/components/header/template.html.erb**
+**app/components/pages/users/list/template.html.erb**
 
 ```html
-<header>
-  Hi, <%= my_user.name %>
-</header>
+<table>
+  <tbody>
+    <% users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 ```
 
 ## View Models
 
-The methods available inside the template will be those defined in your view model. If no view model is defined for your component then our ActionComponent::Component::ViewModel will be used. The view model is instantiated with the arguments that you provide when calling your component.
+The methods available inside your template will be those defined in your view model.
+
+When creating a view model instance we instantiated it with the arguments that you provide while calling your component.
 
 ### ActionComponent::Component::ViewModel
 
@@ -146,34 +156,7 @@ vm.age # 12
 
 We only use our own view model if there is no view_model.rb file inside your component's folder. This file should declare a class following all the Rails naming conventions.
 
-So, imagine that we want our vm to have a random_greeting method. We can can create a view model like this:
-
-
-## Use helpers inside your components
-
-When initializing the view model we also provide two additionals parameters (:h and :helper) so you can have access to rails helpers.
-
-As all view model methods are available to your template your will have access to a `h` or `helper` like this:
-
-**Example of a component's templatefile**
-
-```
-<div class="child">
-  <div class="date">
-    <%= helper.l(Date.new(2019, 01, 03)) %>
-  </div>
-
-  <div class="routes">
-    <%= h.users_path %>
-  </div>
-
-  <div class="translation">
-    <%= h.t('hello')%>
-  </div>
-</div>
-```
-
-Your can create custom view models that inherits from ours
+So, imagine that we want our custom view model to have a random_greeting method. We can can create a view model like this:
 
 **app/components/header/view_model.rb**
 
@@ -195,7 +178,31 @@ Now the template can access the method like this:
 </header>
 ```
 
-### Use helpers inside a ViewModel
+## Using helpers inside your components
+
+When initializing the view model we also provide two parameters (:h and :helper) so you can have access to rails helpers.
+
+As all view model methods are available to your template your will have access to a `h` or `helper` like this:
+
+### Using helpers inside a template
+
+```
+<div class="child">
+  <div class="date">
+    <%= helper.l(Date.new(2019, 01, 03)) %>
+  </div>
+
+  <div class="routes">
+    <%= h.users_path %>
+  </div>
+
+  <div class="translation">
+    <%= h.t('hello')%>
+  </div>
+</div>
+```
+
+### Using helpers inside a ViewModel
 
 A `helper` and `h` attribute are passed when instantiating a ViewModel.
 
@@ -250,7 +257,7 @@ end
 
 # Rendering from a controller
 
-When you are inside an action you can render a component using the following syntax:
+When you are inside in an action you can render a component instead of a rails view using the following syntax:
 
 ```ruby
 render(component: 'my/component/path', view_model_data: { new_arg: 2, more_arg: 'text'})
@@ -271,17 +278,17 @@ class ClientsController < ApplicationController
 end
 ```
 
-Note that, different to rails, we will add a 'pages' folder at the beginning of your path. This is done so you can can have isolated components that represents each action in a isolated namespace.
+This will search for a component with a path of `app/components/pages/clients/index`. Note that we will add a 'pages' before the controller+action path.
 
 # Style namespacing
 
-Each rendered component will be wrapped inside a div with a dynamic data attribute according to the component path. This means that you can create custom css for each component. Example:
+Each rendered component will be wrapped inside a div with a dynamic data attribute storing the component path. This means that you can create custom css for each component. Example:
 
 
 ```
 app
 ├── components
-│   └── user_page
+│   └── shared
 │       └── header
 │           └── template.html.erb
 ```
@@ -290,7 +297,7 @@ If we render the header inside a component it will generate a HTML like this
 
 ```html
 
-<div class='action-component' data-action-component-id='user_page-header'>
+<div class='action-component' data-action-component-path='shared-header'>
   ...
   ...
 </div>
@@ -300,16 +307,18 @@ If we render the header inside a component it will generate a HTML like this
 Then you can customize the component with the following css:
 
 ```css
-[data-action-component-id=project-index] {
+[data-action-component-path=project-index] {
   background: red;
 }
 ```
 
 ## Where do I put my CSS files?
 
-Where it belongs: in your component folder. It doens't matter the name or de number of css/sass/less files that you have... Just don't forget to namespace it!
+Where it belongs: in your component's folder.
 
-Also in your application.css file you should require all the css from the component folder. You can do that with a relative `require_tree`. Like this:
+It doesn't matter the name or the number of css/sass/less files that you have in that folder... Just don't forget to namespace it!
+
+Also, in your application.css file you should require all the css from the app/components folder. You can do that with a relative `require_tree`. Like this:
 
 **application.sass**
 
@@ -322,11 +331,9 @@ Also in your application.css file you should require all the css from the compon
 // ...
 ```
 
-
-
 # Configuration
 
-You can change some parameters by creating a initializer on your app
+You can change some parameters by creating an initializer on your rails app.
 
 **config/initializers/action_component.rb**
 
@@ -337,14 +344,14 @@ ActionComponent.configure do |config|
   # Folder path to look for components
   config.components_path = 'app/components'
 
-  # Default name for the html/erb/slim/etc template file inside the component folder
+  # Name for the html/erb/slim/etc template file inside the component folder
   config.template_file_name = 'template'
 
-  # Default name for the view model file inside the component folder
+  # Name for the view model file inside the component folder
   config.view_model_file_name = 'view_model'
 
-  # Default folder path inside the components folder to look for when
-  # rendering the default component for an action inside a controller
+  # Folder path inside the components folder to look for pages when
+  # rendering the default component for a controller#action
   config.component_folder_for_actions = 'pages'
 end
 
