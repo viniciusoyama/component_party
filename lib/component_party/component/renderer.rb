@@ -1,4 +1,4 @@
-module ActionComponent
+module ComponentParty
   # Renders a given component
   class Component
     class Renderer < ActionView::TemplateRenderer
@@ -18,7 +18,7 @@ module ActionComponent
         ActionView::OutputBuffer.new(rendered)
       end
 
-      def template_path_from_component_path(component_path, template_file_name: ActionComponent.configuration.template_file_name)
+      def template_path_from_component_path(component_path, template_file_name: ComponentParty.configuration.template_file_name)
         File.join(component_path, template_file_name).to_s
       end
 

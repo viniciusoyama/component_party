@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActionComponent::Component::ViewModel do
+describe ComponentParty::Component::ViewModel do
   it "generates a method for each argument" do
     vm = described_class.new(argument1: 'test1', argument2: 'test2')
     expect(vm.argument1).to eq('test1')

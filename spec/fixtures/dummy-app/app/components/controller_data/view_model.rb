@@ -1,4 +1,4 @@
-class ControllerData::ViewModel < ActionComponent::Component::ViewModel
+class ControllerData::ViewModel < ComponentParty::Component::ViewModel
 
   def formated_page
     "Current page: #{c.params[:page]}"

@@ -1,8 +1,8 @@
-# Welcome to actioncomponent gem
+# Welcome to component_party gem
 
-[![Travis](https://travis-ci.com/viniciusoyama/actioncomponent.svg?branch=master)](https://travis-ci.com/viniciusoyama/actioncomponent)
-[![Code Climate](https://codeclimate.com/github/viniciusoyama/actioncomponent/badges/gpa.svg)](https://codeclimate.com/github/viniciusoyama/actioncomponent)
-[![Test Coverage](https://codeclimate.com/github/viniciusoyama/actioncomponent/badges/coverage.svg)](https://codeclimate.com/github/viniciusoyama/actioncomponent)
+[![Travis](https://travis-ci.com/viniciusoyama/component_party.svg?branch=master)](https://travis-ci.com/viniciusoyama/component_party)
+[![Code Climate](https://codeclimate.com/github/viniciusoyama/component_party/badges/gpa.svg)](https://codeclimate.com/github/viniciusoyama/component_party)
+[![Test Coverage](https://codeclimate.com/github/viniciusoyama/component_party/badges/coverage.svg)](https://codeclimate.com/github/viniciusoyama/component_party)
 
 Frontend components for Ruby on Rails: group your view logic, html, css and javascript files in components to be used in views or directly rendered from controllers.
 
@@ -12,7 +12,7 @@ Add to your:
 
 **Gemfile**
 ```ruby
-gem 'actioncomponent'
+gem 'component_party'
 ```
 
 # What do you get?
@@ -40,8 +40,8 @@ You can render any component inside a template file (be it a view or another com
 
 ```html
 <%
-  import_action_component 'Filter', path: 'user/filter'
-  import_action_component 'List', path: 'user/list'
+  import_component 'Filter', path: 'user/filter'
+  import_component 'List', path: 'user/list'
 %>
 
 <%= Filter() %>
@@ -72,8 +72,8 @@ Yes! You can use your processor to render a component template or css file.
 
 ```html
 <%
-  import_action_component 'Filter', path: 'pages/users/filter'
-  import_action_component 'List', path: 'pages/users/list'
+  import_component 'Filter', path: 'pages/users/filter'
+  import_component 'List', path: 'pages/users/list'
 %>
 
 <%= Filter() %>
@@ -114,7 +114,7 @@ And you want to render this component in your layout file.
 ```html
 
 <%
-  import_action_component 'Header', path: 'header'
+  import_component 'Header', path: 'header'
 %>
 
 <%= Header(my_user: current_user) %>
@@ -142,12 +142,12 @@ The methods available inside your template will be those defined in your view mo
 
 When creating a view model instance we instantiated it with the arguments that you provide while calling your component.
 
-### ActionComponent::Component::ViewModel
+### ComponentParty::Component::ViewModel
 
 It takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one of them. Example:
 
 ```ruby
-vm = ActionComponent::Component::ViewModel.new(name: 'John', age: 12)
+vm = ComponentParty::Component::ViewModel.new(name: 'John', age: 12)
 vm.name # John
 vm.age # 12
 ```
@@ -161,7 +161,7 @@ So, imagine that we want our custom view model to have a random_greeting method.
 **app/components/header/view_model.rb**
 
 ```ruby
-class Header::ViewModel < ActionComponent::Component::ViewModel
+class Header::ViewModel < ComponentParty::Component::ViewModel
   def random_greeting
     hi_text = ['Hi', 'Yo'].sample
     "#{hi_text}, #{user.name}"
@@ -207,7 +207,7 @@ As all view model methods are available to your template your will have access t
 A `helper` and `h` attribute are passed when instantiating a ViewModel.
 
 ```ruby
-class Header::ViewModel < ActionComponent::Component::ViewModel
+class Header::ViewModel < ComponentParty::Component::ViewModel
   def random_greeting
     hi_text = ['Hi', 'Yo'].sample
     "#{hi_text}, #{user.name}."
@@ -234,7 +234,7 @@ When rendering a component, a `c` or `controller` parameter is passed through so
 **view_model**
 
 ```ruby
-class ControllerData::ViewModel < ActionComponent::Component::ViewModel
+class ControllerData::ViewModel < ComponentParty::Component::ViewModel
 
   def formated_page
     "Current page: #{c.params[:page]}"
@@ -335,12 +335,12 @@ Also, in your application.css file you should require all the css from the app/c
 
 You can change some parameters by creating an initializer on your rails app.
 
-**config/initializers/action_component.rb**
+**config/initializers/component_party.rb**
 
 
 ```ruby
 
-ActionComponent.configure do |config|
+ComponentParty.configure do |config|
   # Folder path to look for components
   config.components_path = 'app/components'
 

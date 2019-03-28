@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActionComponent::Component::Renderer do
+describe ComponentParty::Component::Renderer do
   let(:helper_object) do
     Class.new do
       def l
@@ -17,7 +17,7 @@ describe ActionComponent::Component::Renderer do
     vm
   }
   subject do
-    ActionComponent::Component::Renderer.new(ActionView::LookupContext.new(
+    ComponentParty::Component::Renderer.new(ActionView::LookupContext.new(
       [fixture_path('/components')]
     ), view_model)
   end
@@ -41,7 +41,7 @@ describe ActionComponent::Component::Renderer do
 
   describe '#template_path_from_component_path' do
     it "Joins the component path with the default template file name" do
-      allow(ActionComponent.configuration).to receive(:template_file_name).and_return('templatefile')
+      allow(ComponentParty.configuration).to receive(:template_file_name).and_return('templatefile')
 
       path = subject.template_path_from_component_path('my-long/path/on/folder')
 

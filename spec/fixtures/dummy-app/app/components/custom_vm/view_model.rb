@@ -1,4 +1,4 @@
-class CustomVm::ViewModel < ActionComponent::Component::ViewModel
+class CustomVm::ViewModel < ComponentParty::Component::ViewModel
   def hardcoded
     'Hardcoded Method'
   end

@@ -2,7 +2,7 @@
 # rubocop:disable Metrics/AbcSize
 # rubocop:disable Metrics/MethodLength
 
-module ActionComponent #:nodoc:
+module ComponentParty #:nodoc:
   # Renders a given component
   module Controller
     module Rendering
@@ -17,7 +17,7 @@ module ActionComponent #:nodoc:
       def render_to_body(options = {})
         if options.key?(:component)
           component_path = if options[:component] == true
-                             Pathname.new(ActionComponent.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
+                             Pathname.new(ComponentParty.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
                            elsif options[:component].is_a?(String)
                              options[:component]
                            else
@@ -34,7 +34,7 @@ module ActionComponent #:nodoc:
       def render_component(path:, view_model_data: )
         view_model_data ||= {}
         view_model_data = { c: self, controller: self }.merge(view_model_data)
-        ActionComponent::Component.new(
+        ComponentParty::Component.new(
           component_path: path,
           view_model_data: view_model_data
         ).render

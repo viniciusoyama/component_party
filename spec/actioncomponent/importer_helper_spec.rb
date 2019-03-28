@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-describe ActionComponent::ImporterHelper do
+describe ComponentParty::ImporterHelper do
 
 
-  describe '#import_action_component' do
+  describe '#import_component' do
     let(:mock_component) { double() }
 
     let(:subject) do
       sub = Class.new do
-        include ActionComponent::ImporterHelper
+        include ComponentParty::ImporterHelper
 
         def controller
         end
@@ -25,7 +25,7 @@ describe ActionComponent::ImporterHelper do
 
     describe 'generated component method' do
       it "creates a method with correct name" do
-        subject.import_action_component 'Header', path: 'my_path_to_header/folder'
+        subject.import_component 'Header', path: 'my_path_to_header/folder'
 
         expect(subject).to respond_to(:Header)
       end
@@ -33,7 +33,7 @@ describe ActionComponent::ImporterHelper do
       it "renders the component" do
         expect(mock_component).to receive(:render)
 
-        subject.import_action_component 'Header', path: 'my_path_to_header/folder'
+        subject.import_component 'Header', path: 'my_path_to_header/folder'
 
         subject.Header()
       end
@@ -41,14 +41,14 @@ describe ActionComponent::ImporterHelper do
       it "Passes the arguments" do
         expect(subject).to receive(:create_component).with('my_path_to_header/folder', { a: 2 })
 
-        subject.import_action_component 'Header', path: 'my_path_to_header/folder'
+        subject.import_component 'Header', path: 'my_path_to_header/folder'
 
         subject.Header(a: 2)
       end
 
       it 'raises if there is no path' do
         expect {
-          subject.import_action_component 'Header'
+          subject.import_component 'Header'
         }.to raise_error('No path informed when importing component Header')
       end
     end
@@ -59,7 +59,7 @@ describe ActionComponent::ImporterHelper do
 
     let(:subject) do
       sub = Class.new do
-        include ActionComponent::ImporterHelper
+        include ComponentParty::ImporterHelper
 
         def controller
         end
@@ -70,14 +70,14 @@ describe ActionComponent::ImporterHelper do
       sub
     end
 
-    it "returns an instace of ActionComponent::Component::Renderer" do
-      expect(subject.create_component('my path', {})).to be_an_instance_of(ActionComponent::Component)
+    it "returns an instace of ComponentParty::Component::Renderer" do
+      expect(subject.create_component('my path', {})).to be_an_instance_of(ComponentParty::Component)
     end
 
     it "passes the controller as VM data" do
       mock_controller = double
       allow(subject).to receive(:controller).and_return(mock_controller)
-      expect(ActionComponent::Component).to receive(:new).with(component_path: 'my path', view_model_data: hash_including(name: 'ze', controller: mock_controller, c: mock_controller))
+      expect(ComponentParty::Component).to receive(:new).with(component_path: 'my path', view_model_data: hash_including(name: 'ze', controller: mock_controller, c: mock_controller))
       subject.create_component('my path', { name: 'ze' })
     end
   end

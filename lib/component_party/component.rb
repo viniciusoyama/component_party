@@ -1,4 +1,4 @@
-module ActionComponent
+module ComponentParty
   # Represents a component with a template, style and javascript file
   class Component
     class InvalidVMError < StandardError; end
@@ -31,7 +31,7 @@ module ActionComponent
     end
 
     def renderer
-      ActionComponent::Component::Renderer.new(lookup_context, create_view_model)
+      ComponentParty::Component::Renderer.new(lookup_context, create_view_model)
     end
 
     def lookup_context
@@ -43,12 +43,12 @@ module ActionComponent
     end
 
     def create_view_model
-      vm_class = ActionComponent::Component::ViewModel
+      vm_class = ComponentParty::Component::ViewModel
 
       begin
         vm_class = find_custom_vm_class!
       rescue NameError
-        vm_class = ActionComponent::Component::ViewModel
+        vm_class = ComponentParty::Component::ViewModel
       end
 
       vm_class.new(**view_model_data.merge(view_model_default_data))
@@ -61,18 +61,18 @@ module ActionComponent
     end
 
     def full_component_path
-      Rails.root.join(ActionComponent.configuration.components_path)
+      Rails.root.join(ComponentParty.configuration.components_path)
     end
 
     private
 
     def find_custom_vm_class!
-      vm_file_path = Pathname.new(component_path).join(ActionComponent.configuration.view_model_file_name)
+      vm_file_path = Pathname.new(component_path).join(ComponentParty.configuration.view_model_file_name)
       vm_class = ActiveSupport::Inflector.camelize(vm_file_path).constantize
 
-      unless vm_class.ancestors.include?(ActionComponent::Component::ViewModel)
-        error_msg = "#{vm_class} cannot be used as a ViewModel. Make sure that it inherits from ActionComponent::Component::ViewModel."
-        raise ActionComponent::Component::InvalidVMError, error_msg
+      unless vm_class.ancestors.include?(ComponentParty::Component::ViewModel)
+        error_msg = "#{vm_class} cannot be used as a ViewModel. Make sure that it inherits from ComponentParty::Component::ViewModel."
+        raise ComponentParty::Component::InvalidVMError, error_msg
       end
 
       vm_class

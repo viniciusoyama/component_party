@@ -1,11 +1,11 @@
-require 'actioncomponent/importer_helper'
-require 'actioncomponent/component'
-require 'actioncomponent/component/view_model'
-require 'actioncomponent/component/renderer'
-require 'actioncomponent/controller/rendering'
+require 'component_party/importer_helper'
+require 'component_party/component'
+require 'component_party/component/view_model'
+require 'component_party/component/renderer'
+require 'component_party/controller/rendering'
 
-module ActionComponent
-  # Configuration class for ActionComponent
+module ComponentParty
+  # Configuration class for ComponentParty
   # @attr components_path [String] Components folder path (defaults to 'app/components')
   # @attr components_path [String] Component's template file name (defaults to 'template')
   class Configuration
@@ -31,4 +31,4 @@ module ActionComponent
   end
 end
 
-require 'actioncomponent/railtie'
+require 'component_party/railtie'

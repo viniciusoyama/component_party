@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe ActionComponent::Controller::Rendering do
+describe ComponentParty::Controller::Rendering do
 
   let(:mock_controller) {
     Class.new do
-      prepend ActionComponent::Controller::Rendering
+      prepend ComponentParty::Controller::Rendering
 
       def render_to_body(options = {})
          "original-method"
@@ -22,7 +22,7 @@ describe ActionComponent::Controller::Rendering do
         mock_component = double()
         allow(mock_component).to receive(:render).and_return('component-rendered')
 
-        allow(ActionComponent::Component).to receive(:new).and_return(mock_component)
+        allow(ComponentParty::Component).to receive(:new).and_return(mock_component)
       end
 
       it "Renders a component" do
@@ -30,8 +30,8 @@ describe ActionComponent::Controller::Rendering do
       end
 
       it 'Uses the view detected by rails as component' do
-        expect(ActionComponent.configuration).to receive(:component_folder_for_actions).and_return('prependpath')
-        expect(ActionComponent::Component).to receive(:new).with(hash_including(component_path: 'prependpath/devise/sessions/new'))
+        expect(ComponentParty.configuration).to receive(:component_folder_for_actions).and_return('prependpath')
+        expect(ComponentParty::Component).to receive(:new).with(hash_including(component_path: 'prependpath/devise/sessions/new'))
         rails_options = {
           :prefixes=> ["devise/sessions", "devise", "application"],
           :template=> "new"
@@ -40,17 +40,17 @@ describe ActionComponent::Controller::Rendering do
       end
 
       it "Passes the component value as component_path" do
-        expect(ActionComponent::Component).to receive(:new).with(hash_including(component_path: 'path'))
+        expect(ComponentParty::Component).to receive(:new).with(hash_including(component_path: 'path'))
         expect(mock_controller.render_to_body(component: 'path')).to eq("component-rendered")
       end
 
       it "Passes the current controller as view model data" do
-        expect(ActionComponent::Component).to receive(:new).with(hash_including(view_model_data: hash_including({ c: mock_controller, controller: mock_controller })))
+        expect(ComponentParty::Component).to receive(:new).with(hash_including(view_model_data: hash_including({ c: mock_controller, controller: mock_controller })))
         mock_controller.render_to_body(component: 'path')
       end
 
       it "Passes custom view model data" do
-        expect(ActionComponent::Component).to receive(:new).with(hash_including(view_model_data: hash_including({
+        expect(ComponentParty::Component).to receive(:new).with(hash_including(view_model_data: hash_including({
           c: mock_controller,
           controller: mock_controller,
           new_arg: 2,

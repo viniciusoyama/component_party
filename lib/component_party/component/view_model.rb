@@ -1,8 +1,8 @@
-module ActionComponent
+module ComponentParty
   # Renders a given component
   class Component
     class ViewModel
-      include ActionComponent::ImporterHelper
+      include ComponentParty::ImporterHelper
 
       def initialize(**args)
         generate_methods_from_hash(args)

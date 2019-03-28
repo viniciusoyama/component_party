@@ -15,7 +15,7 @@ Metrics/LineLength:
 
 AllCops:
   Exclude:
-    - actioncomponent.gemspec
+    - component_party.gemspec
     - 'exe/**/*'
     - 'bin/**/*'
     - 'spec/**/*'
