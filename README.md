@@ -136,6 +136,33 @@ You can access the user attribute in your template like this:
 </table>
 ```
 
+## Relative importing also works!
+
+
+```
+app
+├── components
+│   └── user
+│       └── panel
+│           └── sidebar
+│               └── template.html.erb
+│           └── template.html.erb
+```
+
+
+**app/components/user/panel/sidebar.html.erb**
+
+```html
+
+<%
+  import_component 'Sidebar', path: './sidebar'
+%>
+
+<%= Sidebar() %>
+```
+
+Note that "./" before the sidebar component. This will look for a `sidebar` component inside the app/components/user/panel folder. 
+
 ## View Models
 
 The methods available inside your template will be those defined in your view model.
