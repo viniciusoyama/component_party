@@ -19,6 +19,25 @@ describe ComponentParty::Component do
     end
   end
 
+  describe 'path normalization' do
+    context 'when path is absolute' do
+      it 'removes the first /' do
+        component = ComponentParty::Component.new(component_path: 'user_list')
+        expect(component.component_path).to eq('user_list')
+        component = ComponentParty::Component.new(component_path: '/user_list')
+        expect(component.component_path).to eq('user_list')
+      end
+    end
+
+
+    context 'when path is relative' do
+      it 'removes the first ./' do
+        component = ComponentParty::Component.new(component_path: './user_list')
+        expect(component.component_path).to eq('user_list')
+      end
+    end
+  end
+
   describe '#create_view_model' do
     it 'raises an error if VM does not inherits from ComponentParty::Component::ViewModel' do
       subject = ComponentParty::Component.new(component_path: '/invalid_vm')
@@ -73,6 +92,12 @@ describe ComponentParty::Component do
       subject = ComponentParty::Component.new(component_path: '/component_without_vm')
       expect(subject).to receive(:lookup_context).and_return('existing' )
       expect(subject.view_model_default_data[:lookup_context]).to eq('existing')
+    end
+
+
+    it 'adds component' do
+      subject = ComponentParty::Component.new(component_path: '/component_without_vm')
+      expect(subject.view_model_default_data[:component]).to eq(subject)
     end
   end
 

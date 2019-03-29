@@ -18,16 +18,18 @@ module ComponentParty
       end
     end
 
-    attr_reader :view_model_data, :component_path
+    attr_reader :view_model_data
+    attr_reader :component_path
+    attr_reader :parent_component
 
-    def initialize(component_path:, lookup_context: nil, view_model_data: {})
-      @component_path = component_path.to_s.gsub(%r{^/}, '')
+    def initialize(component_path:, view_model_data: {}, lookup_context: nil)
+      @component_path = component_path.to_s.gsub(%r{^(/)|^(./)}, '')
       @lookup_context = lookup_context
       @view_model_data = view_model_data
     end
 
     def render
-      renderer.render(component_path: @component_path)
+      renderer.render(component_path: component_path)
     end
 
     def renderer
@@ -55,9 +57,14 @@ module ComponentParty
     end
 
     def view_model_default_data
-      # lookup_context is necessary for when there is an exception in our template
-      # this is used in order to better describe the error stack
-      self.class.helper_vm_params.merge(lookup_context: lookup_context)
+      self.class.helper_vm_params.merge(
+        # lookup_context is necessary for when there is an exception in our template
+        # this is used in order to better describe the error stack
+        lookup_context: lookup_context,
+        # component is necessary in order to keep track of the component
+        # tree so we can do relative imports fetching the parent component path
+        component: self
+      )
     end
 
     def full_component_path
