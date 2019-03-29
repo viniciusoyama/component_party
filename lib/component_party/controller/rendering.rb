@@ -1,6 +1,5 @@
 # rubocop:disable Metrics/LineLength
 # rubocop:disable Metrics/AbcSize
-# rubocop:disable Metrics/MethodLength
 
 module ComponentParty #:nodoc:
   # Renders a given component
@@ -16,13 +15,7 @@ module ComponentParty #:nodoc:
       # }
       def render_to_body(options = {})
         if options.key?(:component)
-          component_path = if options[:component] == true
-                             Pathname.new(ComponentParty.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
-                           elsif options[:component].is_a?(String)
-                             options[:component]
-                           else
-                             raise "Wrong value for 'component' key while calling render method. Argument class is #{options[:component].class}. Only String or true values are expected."
-                           end
+          component_path = get_path_for_component_render_options(options)
           render_component(path: component_path, view_model_data: options[:view_model_data])
         else
           super
@@ -30,6 +23,16 @@ module ComponentParty #:nodoc:
       end
 
       private
+
+      def get_path_for_component_render_options(options)
+        if options[:component] == true
+          Pathname.new(ComponentParty.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
+        elsif options[:component].is_a?(String)
+          options[:component]
+        else
+          raise "Wrong value for 'component' key while calling render method. Argument class is #{options[:component].class}. Only String or true values are expected."
+        end
+      end
 
       def render_component(path:, view_model_data:)
         view_model_data ||= {}
