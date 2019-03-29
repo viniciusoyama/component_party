@@ -161,7 +161,7 @@ app
 <%= Sidebar() %>
 ```
 
-Note that "./" before the sidebar component. This will look for a `sidebar` component inside the app/components/user/panel folder. 
+Note that "./" before the sidebar component. This will look for a `sidebar` component inside the app/components/user/panel folder.
 
 ## View Models
 
@@ -324,7 +324,7 @@ If we render the header inside a component it will generate a HTML like this
 
 ```html
 
-<div class='action-component' data-action-component-path='shared-header'>
+<div class='component' data-component-path='shared-header'>
   ...
   ...
 </div>
@@ -334,7 +334,7 @@ If we render the header inside a component it will generate a HTML like this
 Then you can customize the component with the following css:
 
 ```css
-[data-action-component-path=project-index] {
+[data-component-path=shared-header] {
   background: red;
 }
 ```
