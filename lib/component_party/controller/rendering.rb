@@ -31,7 +31,7 @@ module ComponentParty #:nodoc:
 
       private
 
-      def render_component(path:, view_model_data: )
+      def render_component(path:, view_model_data:)
         view_model_data ||= {}
         view_model_data = { c: self, controller: self }.merge(view_model_data)
         ComponentParty::Component.new(

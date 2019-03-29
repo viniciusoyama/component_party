@@ -1,25 +1,30 @@
 require 'rails_helper'
 
 describe ComponentParty::ImporterHelper do
+  let(:subject) do
+    sub = Class.new do
+      include ComponentParty::ImporterHelper
 
+      def controller
+      end
+
+      def component
+        OpenStruct.new(
+          component_path: 'component/path',
+          lookup_context: ActionView::LookupContext.new(['lookup/folder'])
+        )
+      end
+
+    end.new
+
+    sub
+  end
 
   describe '#import_component' do
     let(:mock_component) { double() }
 
-    let(:subject) do
-      sub = Class.new do
-        include ComponentParty::ImporterHelper
-
-        def controller
-        end
-      end.new
-
-      allow(sub).to receive(:create_component).and_return(mock_component)
-
-      sub
-    end
-
     before(:each) do
+      allow(subject).to receive(:create_component).and_return(mock_component)
       allow(mock_component).to receive(:render)
     end
 
@@ -55,30 +60,52 @@ describe ComponentParty::ImporterHelper do
   end
 
   describe '#create_component' do
-    let(:mock_view_renderer) { double() }
-
-    let(:subject) do
-      sub = Class.new do
-        include ComponentParty::ImporterHelper
-
-        def controller
-        end
-      end.new
-
-      allow(sub).to receive(:view_renderer).and_return(mock_view_renderer)
-
-      sub
+    before(:each) do
+      allow(subject).to receive(:get_import_component_lookup_context).and_return("mock")
     end
 
     it "returns an instace of ComponentParty::Component::Renderer" do
       expect(subject.create_component('my path', {})).to be_an_instance_of(ComponentParty::Component)
     end
 
+    it "passes the path normalized" do
+      expect(ComponentParty::Component).to receive(:new).with(hash_including(component_path: 'my path'))
+      subject.create_component('my path', { name: 'ze' })
+    end
+
     it "passes the controller as VM data" do
       mock_controller = double
       allow(subject).to receive(:controller).and_return(mock_controller)
-      expect(ComponentParty::Component).to receive(:new).with(component_path: 'my path', view_model_data: hash_including(name: 'ze', controller: mock_controller, c: mock_controller))
+      expect(ComponentParty::Component).to receive(:new).with(hash_including(view_model_data: hash_including(name: 'ze', controller: mock_controller, c: mock_controller)))
       subject.create_component('my path', { name: 'ze' })
     end
   end
+
+  describe '#get_import_component_lookup_context_for' do
+
+    context 'when path is absolute' do
+      it "doesn't returns a lookup_context" do
+        expect(subject.get_import_component_lookup_context_for('/test')).to be_nil
+        expect(subject.get_import_component_lookup_context_for('test')).to be_nil
+      end
+    end
+
+    context 'when path is relative' do
+
+      it 'Appends the parent component path with its lookup_context base path' do
+        lookup = subject.get_import_component_lookup_context_for('./test')
+        expect(lookup.view_paths.first.to_s).to end_with('lookup/folder/component/path')
+      end
+
+      it "raises an exception if i'm not inside a component" do
+        allow(subject).to receive(:component).and_raise(NameError.new('error'))
+
+        expect {
+          subject.get_import_component_lookup_context_for('./my path')
+        }.to raise_error("You cannot use a relative component importing outside a component's template.")
+      end
+    end
+
+  end
+
 end
