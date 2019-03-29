@@ -53,16 +53,17 @@ If you want to stop using views, just tell the controller to render your compone
 
 ```
 app
-├── components/pages
-│   └── user
-│       └── filter
-│           └── template.erb
-│       └── list
-│           └── template.slim
-│           └── view_model.rb
-│       └── index
-│           └── style.sass
-│           └── template.erb
+├── components
+│   └── /pages
+│      └── users
+│          └── filter
+│             └── template.erb
+│          └── list
+│             └── template.slim
+│             └── view_model.rb
+│          └── index
+│             └── style.sass
+│             └── template.erb
 ```
 
 
@@ -72,13 +73,27 @@ Yes! You can use your processor to render a component template or css file.
 
 ```html
 <%
-  import_component 'Filter', path: 'pages/users/filter'
-  import_component 'List', path: 'pages/users/list'
+  import_component 'Filter', path: './filter'
+  import_component 'List', path: './list'
 %>
 
 <%= Filter() %>
 
 <%= List(users: users) %>
+```
+
+**app/components/pages/users/list/template.html.erb**
+
+```html
+<table>
+  <tbody>
+    <% users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 ```
 
 **app/controllers/users_controller.rb**
@@ -96,9 +111,9 @@ end
 
 ## Pass data to your components in your templates
 
-When rendering your can pass data in a hash/named parameters format. The data will be exposed in your template through a view model.  
+When you render a component you can pass data in a hash format. The data will be exposed in your template through a view model.  
 
-Supose that you have a header component
+Suppose that you have a header component like this:
 
 ```
 app
@@ -120,20 +135,12 @@ And you want to render this component in your layout file.
 <%= Header(my_user: current_user) %>
 ```
 
-You can access the user attribute in your template like this:
+You can access the my_user attribute in your template like this:
 
-**app/components/pages/users/list/template.html.erb**
+**app/components/header/template.html.erb**
 
 ```html
-<table>
-  <tbody>
-    <% users.each do |user| %>
-      <tr>
-        <td><%= user.name %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<p>Hello <%= my_user.name %></p>
 ```
 
 ## Relative importing also works!
@@ -161,13 +168,13 @@ app
 <%= Sidebar() %>
 ```
 
-Note that "./" before the sidebar component. This will look for a `sidebar` component inside the app/components/user/panel folder.
+Note the "./" before the sidebar component path. This will look for a `sidebar` component inside the app/components/user/panel folder.
 
 ## View Models
 
-The methods available inside your template will be those defined in your view model.
+The methods available inside a template will be those defined in your view model.
 
-When creating a view model instance we instantiated it with the arguments that you provide while calling your component.
+When a view model is instantiated we pass the arguments that you provide while calling your component.
 
 ### ComponentParty::Component::ViewModel
 
@@ -205,6 +212,8 @@ Now the template can access the method like this:
 </header>
 ```
 
+Note that you *must* inherit from ComponentParty::Component::ViewModel in order to be compliant to the internal expected API that a view model must have. Also, as everything you pass to a view model is available as a getter method, it is not expected that you override the `initialize` method in your custom view model.
+
 ## Using helpers inside your components
 
 When initializing the view model we also provide two parameters (:h and :helper) so you can have access to rails helpers.
@@ -231,7 +240,7 @@ As all view model methods are available to your template your will have access t
 
 ### Using helpers inside a ViewModel
 
-A `helper` and `h` attribute are passed when instantiating a ViewModel.
+A `helper` and a `h` attribute are passed when instantiating a ViewModel. That means that you can call a `h` or a `helper` method anywhere in your class.
 
 ```ruby
 class Header::ViewModel < ComponentParty::Component::ViewModel
@@ -271,12 +280,18 @@ class ControllerData::ViewModel < ComponentParty::Component::ViewModel
     "Searching for: #{controller.params[:search]}"
   end
 
+  def hello
+    "Hi #{controller.current_user.name}"
+  end
+
 end
 ```
 
 **template.erb**
 
 ```html
+<%= hello %>
+
 <%= formated_search %>
 
 <%= formated_page %>
@@ -284,7 +299,7 @@ end
 
 # Rendering from a controller
 
-When you are inside in an action you can render a component instead of a rails view using the following syntax:
+When you are in an action you can render a component instead of a rails view using the following syntax:
 
 ```ruby
 render(component: 'my/component/path', view_model_data: { new_arg: 2, more_arg: 'text'})
@@ -297,8 +312,6 @@ If you want to render the default component for an given action (just like rails
 class ClientsController < ApplicationController
 
   def index
-    # Will search in
-    # components/pages/clients/index
     render component: true, view_model_data: { clients: Client.all }
   end
 
@@ -306,6 +319,24 @@ end
 ```
 
 This will search for a component with a path of `app/components/pages/clients/index`. Note that we will add a 'pages' before the controller+action path.
+
+
+*why not set this behavior to be the default?*
+
+Even if the default behavior was to render a component instead of a view the developer would have to pass the view model data in the action using some kind of method like:
+
+```
+def index
+  set_view_model_attribute(:users, User.all)
+end
+```
+
+Also, as we want to make things more explicitly (in case that another dev that doesn't know about this gem enters the project) so it's better to always have to write the command.
+
+```
+render component: true
+```
+
 
 # Style namespacing
 
@@ -315,18 +346,18 @@ Each rendered component will be wrapped inside a div with a dynamic data attribu
 ```
 app
 ├── components
-│   └── shared
+│   └── shared_stuff
 │       └── header
 │           └── template.html.erb
+│           └── style.css
 ```
 
-If we render the header inside a component it will generate a HTML like this
+When we render the header it will generate a HTML like this
 
 ```html
 
-<div class='component' data-component-path='shared-header'>
-  ...
-  ...
+<div class='component' data-component-path='shared_stuff-header'>
+  => content in header/template.html.erb
 </div>
 
 ```
@@ -334,7 +365,7 @@ If we render the header inside a component it will generate a HTML like this
 Then you can customize the component with the following css:
 
 ```css
-[data-component-path=shared-header] {
+[data-component-path=shared_stuff-header] {
   background: red;
 }
 ```
