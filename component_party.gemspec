@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'component_party'
-  s.version     = '0.5.0'
+  s.version     = '0.5.1'
   s.date        = '2019-03-28'
   s.summary     = 'Stop using views: frontend components architecture for Ruby on Rails.'
   s.description = 'Frontend components for Ruby on Rails: group your template, logic (view model), css and javascript files in components and render it directly from controllers!'
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
-  s.add_dependency 'rails', '>= 4.0.0'
+  s.add_dependency 'rails', '>= 4.2.0', '< 6'
 
   # Quality Control
   s.add_development_dependency 'rspec'
@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   # https://codingdaily.wordpress.com/2011/01/14/test-a-gem-with-the-rails-3-stack/
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'rails', '> 4.0'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'sqlite3'
 end
