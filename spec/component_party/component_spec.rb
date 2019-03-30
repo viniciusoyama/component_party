@@ -19,6 +19,12 @@ describe ComponentParty::Component do
     end
   end
 
+  describe '#renderer' do
+    it "setups a renderer" do
+      expect(subject.renderer).to be_an_instance_of(ComponentParty::Component::Renderer)
+    end
+  end
+
   describe 'path normalization' do
     context 'when path is absolute' do
       it 'removes the first /' do
@@ -38,36 +44,36 @@ describe ComponentParty::Component do
     end
   end
 
-  describe '#create_view_model' do
+  describe '#view_model' do
     it 'raises an error if VM does not inherits from ComponentParty::Component::ViewModel' do
       subject = ComponentParty::Component.new(component_path: '/invalid_vm')
 
       expect {
-        subject.create_view_model()
+        subject.view_model()
       }.to raise_error(ComponentParty::Component::InvalidVMError, 'InvalidVm::ViewModel cannot be used as a ViewModel. Make sure that it inherits from ComponentParty::Component::ViewModel.')
     end
 
     it "returns a default instance if custom vm file doesn't exists" do
       subject = ComponentParty::Component.new(component_path: '/component_without_vm')
-      expect(subject.create_view_model()).to be_an_instance_of(ComponentParty::Component::ViewModel)
+      expect(subject.view_model()).to be_an_instance_of(ComponentParty::Component::ViewModel)
     end
 
     it "merges vm with default data" do
       subject = ComponentParty::Component.new(component_path: '/component_without_vm')
       allow(subject).to receive(:view_model_default_data).and_return({ aditional: 'more'} )
-      expect(subject.create_view_model.aditional).to eq('more')
+      expect(subject.view_model.aditional).to eq('more')
     end
 
     it "searches for a constant with the vm path" do
       subject = ComponentParty::Component.new(component_path: '/with_vm')
 
-      expect(subject.create_view_model()).to be_an_instance_of(WithVm::ViewModel)
+      expect(subject.view_model()).to be_an_instance_of(WithVm::ViewModel)
     end
 
     it 'passes the data to the view model' do
       expect(ComponentParty::Component::ViewModel).to receive(:new).with(hash_including(number: 8, word: 'hi')).and_call_original
       subject = ComponentParty::Component.new(component_path: '/component_without_vm', view_model_data: { number: 8, word: 'hi' })
-      vm = subject.create_view_model()
+      vm = subject.view_model()
     end
 
     it 'passes helpers to the VM' do
@@ -76,7 +82,7 @@ describe ComponentParty::Component do
       expect(ComponentParty::Component).to receive(:helper_vm_params).and_return({
         h: mock_helpers
       })
-      vm = subject.create_view_model()
+      vm = subject.view_model()
       expect(vm.h).to be(mock_helpers)
     end
   end

@@ -16,20 +16,27 @@ describe ComponentParty::Component::Renderer do
     allow(vm).to receive(:helper).and_return(helper_object)
     vm
   }
+
+  let(:component) { double(
+    view_model: view_model,
+    lookup_context: ActionView::LookupContext.new([fixture_path('/components')]),
+    component_path: 'no-op'
+  )}
+
   subject do
-    ComponentParty::Component::Renderer.new(ActionView::LookupContext.new(
-      [fixture_path('/components')]
-    ), view_model)
+    ComponentParty::Component::Renderer.new(component)
   end
 
   describe '#render' do
     it "renders the component template" do
-      rendered = subject.render(component_path: '/user_list')
+      allow(component).to receive(:component_path).and_return('/user_list')
+      rendered = subject.render
       expect(rendered).to include('Listing Users')
     end
 
     it "Applies a div namespacing the component" do
-      rendered = subject.render(component_path: '/css_namespace/nesting')
+      allow(component).to receive(:component_path).and_return('/css_namespace/nesting')
+      rendered = subject.render
       expect(rendered).to include('CSS')
       html = Nokogiri(rendered)
       expect(html.children.count).to be(1)

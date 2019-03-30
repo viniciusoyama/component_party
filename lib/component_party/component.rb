@@ -29,11 +29,11 @@ module ComponentParty
     end
 
     def render
-      renderer.render(component_path: component_path)
+      renderer.render
     end
 
     def renderer
-      ComponentParty::Component::Renderer.new(lookup_context, create_view_model)
+      ComponentParty::Component::Renderer.new(self)
     end
 
     def lookup_context
@@ -44,7 +44,9 @@ module ComponentParty
       )
     end
 
-    def create_view_model
+    def view_model
+      return @view_model if @view_model
+
       vm_class = ComponentParty::Component::ViewModel
 
       begin
@@ -53,7 +55,7 @@ module ComponentParty
         vm_class = ComponentParty::Component::ViewModel
       end
 
-      vm_class.new(**view_model_data.merge(view_model_default_data))
+      @view_model = vm_class.new(**view_model_data.merge(view_model_default_data))
     end
 
     def view_model_default_data

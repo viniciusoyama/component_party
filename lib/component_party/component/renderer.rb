@@ -5,13 +5,15 @@ module ComponentParty
       class ComponentTemplateFileNotFound < StandardError; end
 
       attr_reader :view_model
+      attr_reader :component_path
 
-      def initialize(lookup_context, view_model)
-        @lookup_context = lookup_context
-        @view_model = view_model
+      def initialize(component)
+        @lookup_context = component.lookup_context
+        @view_model = component.view_model
+        @component_path = component.component_path
       end
 
-      def render(component_path:)
+      def render
         file_path = template_path_from_component_path(component_path)
         rendered = super(view_model, file: file_path)
         rendered = apply_html_namespacing(rendered, component_path)
