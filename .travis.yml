@@ -14,14 +14,14 @@ rvm:
 
 bundler_args: "--binstubs --standalone --without documentation --path ../bundle"
 
-before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-
 script:
   - bundle exec rubocop -c .rubocop.yml
   - bundle exec rspec
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 
 notifications:
   email: false
+
+addons:
+  code_climate:
+    repo_token:
+      secure: "MoBGyUHncWIlgIfeEVpMbdh3dji5fU1phCqTHZh5yfsj7KVTK+CShfqpF38oa5ABmQnbt5xccZ7FJxkva5bOuo7Jg2B8ITHa2phi3Y/4hgAxKuDe7AZPQmRRQQ4Xl/JP1qPkeJeh1jmy4MVc4MOUJPB7aenbofMCNWY+2ADdTAt9TcOgiA8ab3gFqv31pvrAPLyBwTCvr8dUC+gwZN+lPEwsHB8SrtEuKlOmnbAhJwoYDVs7sjMyxEmGVtVrLWs1vJxaPObt0iOR13UqaYIKClvCsuVjMTzZPpoxyYB6Xp4WB5JV/gfikT8kdRTCvzvJVvMS8k+1hlyxn9zaGgIWXxwqfdRLI+1SI5EEtB3X6cUkTv1nAuYdYg7p4/eagAxP/jsqWYAai1oxvnRLHA8lnGgzjjWs6Oc9DviY6R5Ltpb22qkeKrQ9Mnw6nsB6zFAI8qHLGFVXTn/95cz7h/On63cKCUEcPrPIMcIFiMvx0egD/mHOYb0q694c9pLbNDhri+hE7AjpOPmqrCEm5AuEgGO+A+H/WCboOQ9fqf81EHkOl3Mn1VSI2ZaKzBjt9O2px7BvQe3PRVvHGQljfgrMt7uH51OdFC6ljP/w/yNGryGF138W5DKu3Hf2EaUv2kK+oKBWGCWA1tVsA5VdiyYV+DCG7v7XYRq5ch3KP+NlI6I="
