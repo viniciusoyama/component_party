@@ -13,6 +13,9 @@ Metrics/LineLength:
   Max: 150
   IgnoredPatterns: ['\A#']
 
+Metrics/MethodLength:
+  Max: 20
+  
 AllCops:
   Exclude:
     - component_party.gemspec
