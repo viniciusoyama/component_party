@@ -20,7 +20,7 @@ describe ComponentParty::Component::Renderer do
   let(:component) { double(
     view_model: view_model,
     lookup_context: ActionView::LookupContext.new([fixture_path('/components')]),
-    component_path: 'no-op'
+    path: 'no-op'
   )}
 
   subject do
@@ -29,13 +29,13 @@ describe ComponentParty::Component::Renderer do
 
   describe '#render' do
     it "renders the component template" do
-      allow(component).to receive(:component_path).and_return('/user_list')
+      allow(component).to receive(:path).and_return('/user_list')
       rendered = subject.render
       expect(rendered).to include('Listing Users')
     end
 
     it "Applies a div namespacing the component" do
-      allow(component).to receive(:component_path).and_return('/css_namespace/nesting')
+      allow(component).to receive(:path).and_return('/css_namespace/nesting')
       rendered = subject.render
       expect(rendered).to include('CSS')
       html = Nokogiri(rendered)
@@ -46,7 +46,7 @@ describe ComponentParty::Component::Renderer do
     end
   end
 
-  describe '#template_path_from_component_path' do
+  describe '#template_path_from_path' do
     it "Joins the component path with the default template file name" do
       allow(ComponentParty.configuration).to receive(:template_file_name).and_return('templatefile')
 

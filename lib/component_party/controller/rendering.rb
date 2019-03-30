@@ -38,7 +38,7 @@ module ComponentParty #:nodoc:
         view_model_data ||= {}
         view_model_data = { c: self, controller: self }.merge(view_model_data)
         ComponentParty::Component.new(
-          component_path: path,
+          path: path,
           view_model_data: view_model_data
         ).render
       end

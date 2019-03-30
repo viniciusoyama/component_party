@@ -19,11 +19,11 @@ module ComponentParty
     end
 
     attr_reader :view_model_data
-    attr_reader :component_path
+    attr_reader :path
     attr_reader :parent_component
 
-    def initialize(component_path:, view_model_data: {}, lookup_context: nil)
-      @component_path = component_path.to_s.gsub(%r{^(/)|^(./)}, '')
+    def initialize(path:, view_model_data: {}, lookup_context: nil)
+      @path = path.to_s.gsub(%r{^(/)|^(./)}, '')
       @lookup_context = lookup_context
       @view_model_data = view_model_data
     end
@@ -76,7 +76,7 @@ module ComponentParty
     private
 
     def find_custom_vm_class!
-      vm_file_path = Pathname.new(component_path).join(ComponentParty.configuration.view_model_file_name)
+      vm_file_path = Pathname.new(path).join(ComponentParty.configuration.view_model_file_name)
       vm_class = ActiveSupport::Inflector.camelize(vm_file_path).constantize
 
       unless vm_class.ancestors.include?(ComponentParty::Component::ViewModel)

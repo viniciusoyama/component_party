@@ -10,7 +10,7 @@ describe ComponentParty::ImporterHelper do
 
       def component
         OpenStruct.new(
-          component_path: 'component/path',
+          path: 'component/path',
           lookup_context: ActionView::LookupContext.new(['lookup/folder'])
         )
       end
@@ -69,7 +69,7 @@ describe ComponentParty::ImporterHelper do
     end
 
     it "passes the path normalized" do
-      expect(ComponentParty::Component).to receive(:new).with(hash_including(component_path: 'my path'))
+      expect(ComponentParty::Component).to receive(:new).with(hash_including(path: 'my path'))
       subject.create_component('my path', { name: 'ze' })
     end
 

@@ -17,7 +17,7 @@ module ComponentParty
 
     def create_component(component_path, view_model_data)
       ComponentParty::Component.new(
-        component_path: component_path,
+        path: component_path,
         lookup_context: get_import_component_lookup_context_for(component_path),
         view_model_data: view_model_data.merge(c: controller, controller: controller)
       )
@@ -25,7 +25,7 @@ module ComponentParty
 
     def get_import_component_lookup_context_for(path)
       if path.starts_with?('./')
-        new_search_path = Pathname.new(component.lookup_context.view_paths[0].to_s).join(component.component_path)
+        new_search_path = Pathname.new(component.lookup_context.view_paths[0].to_s).join(component.path)
         ActionView::LookupContext.new([new_search_path.to_s])
       end
     rescue NameError

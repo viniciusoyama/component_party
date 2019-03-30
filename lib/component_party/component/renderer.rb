@@ -10,7 +10,7 @@ module ComponentParty
       def initialize(component)
         @lookup_context = component.lookup_context
         @view_model = component.view_model
-        @component_path = component.component_path
+        @component_path = component.path
       end
 
       def render

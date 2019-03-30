@@ -31,7 +31,7 @@ describe ComponentParty::Controller::Rendering do
 
       it 'Uses the view detected by rails as component' do
         expect(ComponentParty.configuration).to receive(:component_folder_for_actions).and_return('prependpath')
-        expect(ComponentParty::Component).to receive(:new).with(hash_including(component_path: 'prependpath/devise/sessions/new'))
+        expect(ComponentParty::Component).to receive(:new).with(hash_including(path: 'prependpath/devise/sessions/new'))
         rails_options = {
           :prefixes=> ["devise/sessions", "devise", "application"],
           :template=> "new"
@@ -39,8 +39,8 @@ describe ComponentParty::Controller::Rendering do
         mock_controller.render_to_body(rails_options.merge(component: true))
       end
 
-      it "Passes the component value as component_path" do
-        expect(ComponentParty::Component).to receive(:new).with(hash_including(component_path: 'path'))
+      it "Passes the component value as path" do
+        expect(ComponentParty::Component).to receive(:new).with(hash_including(path: 'path'))
         expect(mock_controller.render_to_body(component: 'path')).to eq("component-rendered")
       end
 
