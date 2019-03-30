@@ -4,7 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/viniciusoyama/component_party/badges/gpa.svg)](https://codeclimate.com/github/viniciusoyama/component_party)
 [![Test Coverage](https://codeclimate.com/github/viniciusoyama/component_party/badges/coverage.svg)](https://codeclimate.com/github/viniciusoyama/component_party)
 
-Frontend components for Ruby on Rails: group your view logic, html, css and javascript files in components to be used in views or directly rendered from controllers.
+Frontend components for Ruby on Rails: group your view logic, html and css files in components to be used in views or directly rendered from controllers.
 
 # How to use?
 
