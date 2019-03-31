@@ -4,39 +4,54 @@
 [![Code Climate](https://codeclimate.com/github/viniciusoyama/component_party/badges/gpa.svg)](https://codeclimate.com/github/viniciusoyama/component_party)
 [![Test Coverage](https://codeclimate.com/github/viniciusoyama/component_party/badges/coverage.svg)](https://codeclimate.com/github/viniciusoyama/component_party)
 
-Frontend components for Ruby on Rails: group your view logic, html and css files in components to be used in views or directly rendered from controllers.
+Frontend components for Ruby on Rails: group your view logic, html and css files in components to be rendered from views or directly from controllers.
 
-# How to use?
+# Table of contents
 
-Add to your:
+<!-- TOC depthFrom:1 depthTo:1 withLinks:1 updateOnSave:0 orderedList:0 -->
 
-**Gemfile**
-```ruby
-gem 'component_party'
-```
+- [Quick overview](#quick-overview)
+- [Importing components](#importing-components)
+- [View Models: pass data to your components](#view-models-pass-data-to-your-components)
+- [Using helpers inside your components](#using-helpers-inside-your-components)
+- [Accessing params and other controller's methods](#accessing-params-and-other-controllers-methods)
+- [Rendering a component from a controller's action](#rendering-a-component-from-a-controllers-action)
+- [Style namespacing: css scoped by component](#style-namespacing-css-scoped-by-component)
+- [Configuration](#configuration)
 
-# What do you get?
+<!-- /TOC -->
 
-## Organize your frontend code
-Your can stop using rails views and organize your frontend by components with isolated logic and css:
+# Quick overview
+
+## Installation
+Add to your gemfile: `gem 'component_party'`
+
+## Using the gem
+
+1) Move things to app/components folder and organize your frontend
+
 
 ```
 app
 ├── components
-│   └── user
-│       └── filter
-│           └── template.html.erb
-│           └── view_model.rb
-│           └── style.sass
-│       └── list
-│           └── template.html.erb
-│           └── style.sass
+│   └── pages
+│       └── users
+│           └── index
+│               └── template.erb
+│               └── style.sass
+│           └── filter
+│               └── template.erb
+│               └── view_model.rb
+│               └── style.sass
+│           └── list
+│               └── template.erb
+│               └── style.sass
 ```
 
 
-You can render any component inside a template file (be it a view or another component)!
+2) Code your templates
 
-**app/view/users/index.html.erb**
+**app/components/pages/users/index/template.erb**
 
 ```html
 <%
@@ -49,40 +64,7 @@ You can render any component inside a template file (be it a view or another com
 <%= List(users: @users) %>
 ```
 
-If you want to stop using views, just tell the controller to render your component: Compoment
-
-```
-app
-├── components
-│   └── /pages
-│      └── users
-│          └── filter
-│             └── template.erb
-│          └── list
-│             └── template.slim
-│             └── view_model.rb
-│          └── index
-│             └── style.sass
-│             └── template.erb
-```
-
-
-Yes! You can use your processor to render a component template or css file.
-
-**app/components/pages/users/index/template.html.erb**
-
-```html
-<%
-  import_component 'Filter', path: './filter'
-  import_component 'List', path: './list'
-%>
-
-<%= Filter() %>
-
-<%= List(users: users) %>
-```
-
-**app/components/pages/users/list/template.html.erb**
+**app/components/pages/users/list/template.erb**
 
 ```html
 <table>
@@ -96,7 +78,9 @@ Yes! You can use your processor to render a component template or css file.
 </table>
 ```
 
-**app/controllers/users_controller.rb**
+and so on...
+
+3) Render a component from your controller
 
 ```ruby
 
@@ -109,46 +93,27 @@ class UsersController < ApplicationController
 end
 ```
 
-## Pass data to your components in your templates
+4) Customize css only for a given component
 
-When you render a component you can pass data in a hash format. The data will be exposed in your template through a view model.  
+**app/components/pages/users/list/style.sass**
 
-Suppose that you have a header component like this:
+```sass
+[data-component-path=pages-users-list] table tr
+  background: blue
+```
+
+5) Be astonished for what you've accomplished
+
+![I'm so cool](rainbow_meme.jpg?raw=true "Title")
+
+# Importing components
 
 ```
 app
 ├── components
-│   └── header
-│       └── template.html.erb
-```
-
-And you want to render this component in your layout file.
-
-**app/views/layouts/application.html.erb**
-
-```html
-
-<%
-  import_component 'Header', path: 'header'
-%>
-
-<%= Header(my_user: current_user) %>
-```
-
-You can access the my_user attribute in your template like this:
-
-**app/components/header/template.html.erb**
-
-```html
-<p>Hello <%= my_user.name %></p>
-```
-
-## Relative importing also works!
-
-
-```
-app
-├── components
+│   └── application_layout
+│       └── header
+│           └── template.html.erb
 │   └── user
 │       └── panel
 │           └── sidebar
@@ -156,6 +121,28 @@ app
 │           └── template.html.erb
 ```
 
+You can import a component inside a layout, view or in a component's template file.
+
+## Absolute importing
+
+Just use the full component path.
+
+**app/views/layouts/application.html.erb**
+
+```html
+
+<%
+  import_component 'Header', path: 'application_layout/header'
+%>
+
+<%= Header(my_user: current_user) %>
+```
+
+## Relative importing
+
+Use "./" before component's path.
+
+The next example will look for a `sidebar` component inside the app/components/user/panel folder.
 
 **app/components/user/panel/sidebar.html.erb**
 
@@ -168,17 +155,43 @@ app
 <%= Sidebar() %>
 ```
 
-Note the "./" before the sidebar component path. This will look for a `sidebar` component inside the app/components/user/panel folder.
+# View Models: pass data to your components
 
-## View Models
+While rendering a component, you can pass data in a hash format. The data will automatically be exposed to your template.  
 
-The methods available inside a template will be those defined in your view model.
+```
+app
+├── components
+│   └── header
+│       └── template.html.erb
+```
 
-When a view model is instantiated we pass the arguments that you provide while calling your component.
+Rendering the component and passing data:
 
-### ComponentParty::Component::ViewModel
+```html
 
-It takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one of them. Example:
+<%
+  import_component 'Header', path: 'header'
+%>
+
+<%= Header(my_user: current_user) %>
+```
+
+You have access to the my_user attribute in your component's template:
+
+The component's template code:
+
+```html
+<p>Hello <%= my_user.name %></p>
+```
+
+## How it works?
+
+The methods available inside a template will be those defined in a view model.
+
+By default, we instantiate our `ComponentParty::Component::ViewModel` class to be the template's rendering context.
+
+This class takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one of them. Example:
 
 ```ruby
 vm = ComponentParty::Component::ViewModel.new(name: 'John', age: 12)
@@ -186,11 +199,13 @@ vm.name # John
 vm.age # 12
 ```
 
-### Create your own ViewModel: handle complex view logic
+When a view model is instantiated we pass the all arguments that you provided while calling your component in the template.
+
+## Create your own ViewModel and handle complex view logic
 
 We only use our own view model if there is no view_model.rb file inside your component's folder. This file should declare a class following all the Rails naming conventions.
 
-So, imagine that we want our custom view model to have a random_greeting method. We can can create a view model like this:
+Suppose that we want a custom view model to have a random_greeting method.
 
 **app/components/header/view_model.rb**
 
@@ -212,15 +227,13 @@ Now the template can access the method like this:
 </header>
 ```
 
-Note that you *must* inherit from ComponentParty::Component::ViewModel in order to be compliant to the internal expected API that a view model must have. Also, as everything you pass to a view model is available as a getter method, it is not expected that you override the `initialize` method in your custom view model.
+Note that you *must* inherit from ComponentParty::Component::ViewModel in order to be compliant to the internal API that a view model must have. Also, it is not expected that you override the `initialize` method in your custom view model.
 
-## Using helpers inside your components
+# Using helpers inside your components
 
-When initializing the view model we also provide two parameters (:h and :helper) so you can have access to rails helpers.
+When initializing the view model we provide two parameters (:h and :helper) so you can access rails helpers.
 
 As all view model methods are available to your template your will have access to a `h` or `helper` like this:
-
-### Using helpers inside a template
 
 ```
 <div class="child">
@@ -238,9 +251,7 @@ As all view model methods are available to your template your will have access t
 </div>
 ```
 
-### Using helpers inside a ViewModel
-
-A `helper` and a `h` attribute are passed when instantiating a ViewModel. That means that you can call a `h` or a `helper` method anywhere in your class.
+Note that you can also use helpers inside your view model.
 
 ```ruby
 class Header::ViewModel < ComponentParty::Component::ViewModel
@@ -263,11 +274,9 @@ end
 ```
 
 
-## Access your controller in your VM or Template
+# Accessing params and other controller's methods
 
-When rendering a component, a `c` or `controller` parameter is passed through so you can have access to all your request data inside your VM or template.
-
-**view_model**
+When initializing the view model we provide two parameters (:c and :controller) so you can access the controller responsible for the current request.
 
 ```ruby
 class ControllerData::ViewModel < ComponentParty::Component::ViewModel
@@ -295,17 +304,27 @@ end
 <%= formated_search %>
 
 <%= formated_page %>
+
+<%= c.params[:search] %>
 ```
 
-# Rendering from a controller
+# Rendering a component from a controller's action
 
 When you are in an action you can render a component instead of a rails view using the following syntax:
 
 ```ruby
-render(component: 'my/component/path', view_model_data: { new_arg: 2, more_arg: 'text'})
+
+class ClientsController < ApplicationController
+
+  def index
+    render(component: 'my/component/path', view_model_data: { new_arg: 2, more_arg: 'text'})
+  end
+
+end
+
 ```
 
-If you want to render the default component for an given action (just like rails automatically renders you views) you can write:
+If you want to render the default component for an given action just do:
 
 
 ```ruby
@@ -318,12 +337,13 @@ class ClientsController < ApplicationController
 end
 ```
 
-This will search for a component with a path of `app/components/pages/clients/index`. Note that we will add a 'pages' before the controller+action path.
+This will search for a component with a path of `app/components/pages/clients/index`.
 
+Note that we will add **pages** before the default controller+action path.
 
-*why not set this behavior to be the default?*
+**Can I make the gem render a component instead of a view by default?**
 
-Even if the default behavior was to render a component instead of a view the developer would have to pass the view model data in the action using some kind of method like:
+We though about doing this but even if the default behavior was to render a component instead of a view, you would have to pass the view model data in the action using some kind of trick like:
 
 ```
 def index
@@ -331,17 +351,18 @@ def index
 end
 ```
 
-Also, as we want to make things more explicitly (in case that another dev that doesn't know about this gem enters the project) so it's better to always have to write the command.
+Using the controller's instance variables just like views doesn't make sense in a ViewModel implementation.
+
+Also, as we want to make things more explicitly (in case of another dev that doesn't know about this gem enters the project), it's better to always have to write the command.
 
 ```
 render component: true
 ```
 
+# Style namespacing: css scoped by component
 
-# Style namespacing
-
+## How to write my css?
 Each rendered component will be wrapped inside a div with a dynamic data attribute storing the component path. This means that you can create custom css for each component. Example:
-
 
 ```
 app
@@ -370,13 +391,11 @@ Then you can customize the component with the following css:
 }
 ```
 
-## Where do I put my CSS files?
+## How to import the css files?
 
-Where it belongs: in your component's folder.
+You can split your css in each component folder. It doesn't matter the name or the number of css/sass/less files that you have in each folder... Just don't forget to namespace it!
 
-It doesn't matter the name or the number of css/sass/less files that you have in that folder... Just don't forget to namespace it!
-
-Also, in your application.css file you should require all the css from the app/components folder. You can do that with a relative `require_tree`. Like this:
+Also, in your application.css file you should require all the css from the app/components folder with a relative `require_tree`. Like this:
 
 **application.sass**
 
@@ -391,10 +410,9 @@ Also, in your application.css file you should require all the css from the app/c
 
 # Configuration
 
-You can change some parameters by creating an initializer on your rails app.
+You can customize our gem by creating an initializer on your rails app.
 
 **config/initializers/component_party.rb**
-
 
 ```ruby
 
