@@ -10,6 +10,7 @@ describe ComponentParty::Component::Renderer do
       end
     end.new
   end
+
   let(:view_model) {
     vm = double()
     allow(vm).to receive(:h).and_return(helper_object)
@@ -28,21 +29,12 @@ describe ComponentParty::Component::Renderer do
   end
 
   describe '#render' do
-    it "renders the component template" do
-      allow(component).to receive(:path).and_return('/user_list')
-      rendered = subject.render
-      expect(rendered).to include('Listing Users')
-    end
-
-    it "Applies a div namespacing the component" do
-      allow(component).to receive(:path).and_return('/css_namespace/nesting')
-      rendered = subject.render
-      expect(rendered).to include('CSS')
-      html = Nokogiri(rendered)
-      expect(html.children.count).to be(1)
-      wrapper = html.children.first
-      expect(wrapper.attr('class')).to eq('component')
-      expect(wrapper.attr('data-component-path')).to eq('css_namespace-nesting')
+    context 'without layout' do
+      it "renders the component template" do
+        allow(component).to receive(:path).and_return('/user_list')
+        rendered = subject.render(double, {})
+        expect(rendered).to include('Listing Users')
+      end
     end
   end
 
@@ -56,5 +48,37 @@ describe ComponentParty::Component::Renderer do
     end
   end
 
+  describe ComponentParty::Component::Renderer::ComponentTemplateDecorator do
+    describe '#render' do
+      it 'ignores the current context and uses view model instead' do
+        template = double
+        view_model = double
 
+        expect(template).to receive(:render).with(view_model, "options")
+
+        decorated = ComponentParty::Component::Renderer::ComponentTemplateDecorator.new(template, view_model, '')
+
+        decorated.render('ignores', 'options')
+      end
+
+      it "Applies a div namespacing the component" do
+        template = double
+        view_model = double
+
+        expect(template).to receive(:render).and_return("<div>Component</div>")
+
+        decorated = ComponentParty::Component::Renderer::ComponentTemplateDecorator.new(template, view_model, '/css_namespace/nesting')
+
+        rendered = decorated.render('ignores')
+
+        expect(rendered).to include('Component')
+
+        html = Nokogiri(rendered)
+        expect(html.children.count).to be(1)
+        wrapper = html.children.first
+        expect(wrapper.attr('class')).to eq('component')
+        expect(wrapper.attr('data-component-path')).to eq('css_namespace-nesting')
+      end
+    end
+  end
 end

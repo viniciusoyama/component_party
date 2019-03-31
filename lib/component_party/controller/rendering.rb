@@ -16,13 +16,11 @@ module ComponentParty #:nodoc:
       def render_to_body(options = {})
         if options.key?(:component)
           component_path = get_path_for_component_render_options(options)
-          render_component(path: component_path, view_model_data: options[:view_model_data])
+          render_component(path: component_path, view_model_data: options[:view_model_data], options: options)
         else
           super
         end
       end
-
-      private
 
       def get_path_for_component_render_options(options)
         if options[:component] == true
@@ -34,13 +32,22 @@ module ComponentParty #:nodoc:
         end
       end
 
-      def render_component(path:, view_model_data:)
+      def render_component(path:, view_model_data:, options:)
         view_model_data ||= {}
         view_model_data = { c: self, controller: self }.merge(view_model_data)
+
         ComponentParty::Component.new(
           path: path,
-          view_model_data: view_model_data
-        ).render
+          view_model_data: view_model_data,
+          lookup_context: render_component_lookup_context
+        ).render(view_context, options)
+      end
+
+      private
+
+      def render_component_lookup_context
+        view_paths.push(Rails.root.join(ComponentParty.configuration.components_path))
+        ActionView::LookupContext.new(view_paths)
       end
     end
   end

@@ -29,8 +29,8 @@ module ComponentParty
       @view_model_data = view_model_data
     end
 
-    def render
-      renderer.render
+    def render(view_context = view_model, options = {})
+      renderer.render(view_context, options)
     end
 
     def renderer
@@ -40,7 +40,7 @@ module ComponentParty
     def lookup_context
       @lookup_context ||= ActionView::LookupContext.new(
         [
-          full_component_path
+          Rails.root.join(ComponentParty.configuration.components_path)
         ]
       )
     end
@@ -63,10 +63,6 @@ module ComponentParty
         # tree so we can do relative imports fetching the parent component path
         component: self
       )
-    end
-
-    def full_component_path
-      Rails.root.join(ComponentParty.configuration.components_path)
     end
 
     private

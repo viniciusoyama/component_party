@@ -14,12 +14,22 @@ describe ComponentParty::Component do
   }
 
   describe '#render' do
-    it "utilizes the renderer" do
+    it "calls renderer with default arguments" do
       mock_renderer = double()
       expect(subject).to receive(:renderer).and_return(mock_renderer)
-      expect(mock_renderer).to receive(:render)
-
+      expect(mock_renderer).to receive(:render).with(subject.view_model, {})
       subject.render()
+    end
+
+    it "fowards the rendering options" do
+      mock_renderer = double()
+      expect(subject).to receive(:renderer).and_return(mock_renderer)
+
+      mock_vm = double()
+
+      expect(mock_renderer).to receive(:render).with(mock_vm, layout: 'fowarded')
+
+      subject.render(mock_vm, layout: 'fowarded')
     end
   end
 
