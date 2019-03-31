@@ -25,8 +25,10 @@ module ComponentParty
 
     def get_import_component_lookup_context_for(path)
       if path.starts_with?('./')
-        new_search_path = Pathname.new(component.lookup_context.view_paths[0].to_s).join(component.path)
-        ActionView::LookupContext.new([new_search_path.to_s])
+        new_search_paths = component.lookup_context.view_paths.map do |vp|
+          Pathname.new(vp).join(component.path)
+        end
+        ActionView::LookupContext.new(new_search_paths)
       end
     rescue NameError
       raise "You cannot use a relative component importing outside a component's template."

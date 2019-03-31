@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :users
-  
+
   resources :testing do
     collection do
       get :default_component
