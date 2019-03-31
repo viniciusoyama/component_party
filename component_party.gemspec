@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version     = '0.6.0'
   s.date        = '2019-03-28'
   s.summary     = 'Stop using views: frontend components architecture for Ruby on Rails.'
-  s.description = 'Frontend components for Ruby on Rails: group your template, logic (view model), css and javascript files in components and render it directly from controllers!'
+  s.description = 'Frontend components for Ruby on Rails: group your view logic, html and css files in components to be rendered from views or directly from controllers.'
   s.authors     = ['Vinícius Oyama']
   s.email       = 'contact@viniciusoyama.com'
   s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
