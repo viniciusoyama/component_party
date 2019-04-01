@@ -102,7 +102,7 @@ end
   background: blue
 ```
 
-5) Be astonished for what you've accomplished
+5) Be astonished by what you've accomplished
 
 ![I'm so cool](rainbow_meme.jpg?raw=true "Title")
 
