@@ -39,13 +39,13 @@ app
 │           └── index
 │               └── template.erb
 │               └── style.sass
-│           └── filter
-│               └── template.erb
-│               └── view_model.rb
-│               └── style.sass
-│           └── list
-│               └── template.erb
-│               └── style.sass
+│               └── filter
+│                   └── template.erb
+│                   └── view_model.rb
+│                   └── style.sass
+│               └── list
+│                   └── template.erb
+│                   └── style.sass
 ```
 
 
@@ -55,13 +55,13 @@ app
 
 ```html
 <%
-  import_component 'Filter', path: 'user/filter'
-  import_component 'List', path: 'user/list'
+  import_component 'Filter', path: './filter'
+  import_component 'List', path: './list'
 %>
 
 <%= Filter() %>
 
-<%= List(users: @users) %>
+<%= List(users: users) %>
 ```
 
 **app/components/pages/users/list/template.erb**
