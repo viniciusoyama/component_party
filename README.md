@@ -104,7 +104,8 @@ end
 
 5) Be astonished by what you've accomplished
 
-![I'm so cool](rainbow_meme.jpg?raw=true "Title")
+![I'm so cool](rainbow_meme_v1.jpg?raw=true "Title")
+![Party Hard](partyhard.gif?raw=true "Title")
 
 # Importing components
 
