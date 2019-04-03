@@ -8,6 +8,6 @@ class CustomVm::ViewModel < ComponentParty::Component::ViewModel
   end
 
   def show_date
-    "Date: #{h.l(Date.new(2019, 03, 29))}"
+    "Date: #{view.l(Date.new(2019, 03, 29))}"
   end
 end

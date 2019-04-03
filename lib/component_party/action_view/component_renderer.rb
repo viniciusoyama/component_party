@@ -24,10 +24,10 @@ module ComponentParty
         template
       end
 
-      def create_view_model(component_path, view_model_data, context)
+      def create_view_model(_component_path, view_model_data, context)
         view_model_data ||= {}
         view_model_data[:view] = context
-        
+
         # vm_class = find_custom_vm_class
         vm_class ||= ComponentParty::ViewModel
 

@@ -4,11 +4,6 @@ describe ComponentParty::ImporterHelper do
   let(:subject) do
     sub = Class.new do
       include ComponentParty::ImporterHelper
-
-      def current_component_path
-        'current/path'
-      end
-
     end.new
 
     sub
@@ -30,6 +25,14 @@ describe ComponentParty::ImporterHelper do
         subject.import_component 'Header', path: 'my_path_to_header/folder'
 
         subject.Header(data: 2)
+      end
+
+      it 'keeps current component path as nil if it\'s a normal template' do
+        expect(subject).to receive(:render).with(hash_including(current_component_path: nil))
+
+        subject.import_component 'Header', path: 'my_path_to_header/folder'
+
+        subject.Header()
       end
 
       it "passes the current component path" do
