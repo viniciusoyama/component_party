@@ -11,7 +11,7 @@ module ComponentParty
 
       def render(context, options)
         options[:file] = template_path_from_component_path(options[:component])
-        options[:locals] = { vm: ComponentParty::ViewModel.new(options[:view_model_data] || {}) }
+        options[:locals] = { vm: create_view_model(options[:component], options[:view_model_data], context) }
         options[:locals][:current_component_path] = options[:current_component_path] if options[:current_component_path].present?
         super(context, options)
       end
@@ -24,10 +24,12 @@ module ComponentParty
         template
       end
 
-      def create_view_model( options)
-
+      def create_view_model(component_path, view_model_data, context)
+        view_model_data ||= {}
+        view_model_data[:view] = context
+        
         # vm_class = find_custom_vm_class
-        vm_class ||= ComponentParty::Component::ViewModel
+        vm_class ||= ComponentParty::ViewModel
 
         vm_class.new(view_model_data)
       end
