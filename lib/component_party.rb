@@ -1,7 +1,5 @@
 require 'component_party/importer_helper'
-require 'component_party/component'
-require 'component_party/component/view_model'
-require 'component_party/component/renderer'
+require 'component_party/view_model'
 require 'component_party/controller/rendering'
 
 module ComponentParty
