@@ -30,8 +30,8 @@ module ComponentParty #:nodoc:
       private
       def get_full_component_path_from(options)
         if options[:component].starts_with?('./')
-          raise "You cannot use a relative component importing outside a component's template." if options[:caller_component_path].blank?
-          Pathname.new(options[:caller_component_path]).join(options[:component]).to_s
+          raise "You cannot use a relative component importing outside a component's template." if options[:current_component_path].blank?
+          Pathname.new(options[:current_component_path]).join(options[:component]).to_s
         else
           options[:component]
         end

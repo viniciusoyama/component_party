@@ -2,19 +2,17 @@ module ComponentParty
   # Renders a given component
   module ActionView
     class ComponentRenderer < ::ActionView::TemplateRenderer
-      attr_reader :caller_component_path
       attr_reader :lookup_context
 
-      def initialize(lookup_context, caller_component_path)
+      def initialize(lookup_context)
         lookup_context.view_paths.push(Rails.root.join(ComponentParty.configuration.components_path))
-        @caller_component_path = caller_component_path
         super(lookup_context)
       end
 
       def render(context, options)
         options[:file] = template_path_from_component_path(options[:component])
         options[:locals] = { vm: ComponentParty::ViewModel.new(options[:view_model_data] || {}) }
-        options[:locals][:caller_component_path] = options[:caller_component_path] if options[:caller_component_path].present?
+        options[:locals][:current_component_path] = options[:current_component_path] if options[:current_component_path].present?
         super(context, options)
       end
 

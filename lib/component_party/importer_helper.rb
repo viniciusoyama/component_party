@@ -11,7 +11,7 @@ module ComponentParty
       raise "No path informed when importing component #{local_component_name}" if opts[:path].blank?
 
       define_singleton_method(local_component_name) do |**args|
-        render(component: opts[:path], view_model_data: args)
+        render(component: opts[:path], view_model_data: args, current_component_path: current_component_path)
       end
     end
   end

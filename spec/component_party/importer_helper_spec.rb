@@ -5,11 +5,8 @@ describe ComponentParty::ImporterHelper do
     sub = Class.new do
       include ComponentParty::ImporterHelper
 
-      def component
-        OpenStruct.new(
-          path: 'component/path',
-          lookup_context: ActionView::LookupContext.new(['lookup/folder'])
-        )
+      def current_component_path
+        'current/path'
       end
 
     end.new
@@ -35,7 +32,14 @@ describe ComponentParty::ImporterHelper do
         subject.Header(data: 2)
       end
 
-      pending "passes the current component path"
+      it "passes the current component path" do
+        expect(subject).to receive(:current_component_path).and_return('current/path')
+        expect(subject).to receive(:render).with(hash_including(current_component_path: 'current/path'))
+
+        subject.import_component 'Header', path: 'my_path_to_header/folder'
+
+        subject.Header(data: 2)
+      end
 
     end
 

@@ -2,24 +2,18 @@ require 'rails_helper'
 
 describe ComponentParty::ActionView::ComponentRenderer do
   subject { described_class.new(
-    ActionView::LookupContext.new([]),
-    'my/component/folder'
+    ActionView::LookupContext.new([])
   )}
 
   describe '#initialize' do
     it 'Adds the component folder to the lookup context' do
       expect(subject.lookup_context.view_paths.first.to_s).to end_with('app/components')
     end
-
-    it 'Stores the caller_component_path' do
-      expect(subject.caller_component_path).to eq('my/component/folder')
-    end
   end
 
   describe '#render' do
     subject { described_class.new(
-      ActionView::LookupContext.new([fixture_path('components')]),
-      'my/component/folder'
+      ActionView::LookupContext.new([fixture_path('components')])
     )}
 
     it "renders the component template" do
@@ -32,8 +26,8 @@ describe ComponentParty::ActionView::ComponentRenderer do
       expect(rendered).to include('View Model Number: two')
     end
 
-    it "passes the caller_component_path as local" do
-      rendered = subject.render(double, { component: 'component_rendering_caller_testing', caller_component_path: 'caller/path'})
+    it "passes the current_component_path as local" do
+      rendered = subject.render(double, { component: 'component_rendering_caller_testing', current_component_path: 'caller/path'})
       expect(rendered).to include('Caller locals: caller/path')
     end
   end

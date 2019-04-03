@@ -51,7 +51,7 @@ describe ComponentParty::ActionView::Renderer do
 
       context 'when path is relative' do
         it 'Appends the parent component path with its lookup_context base path' do
-          opts = { component: './test', caller_component_path: 'pages/users/index' }
+          opts = { component: './test', current_component_path: 'pages/users/index' }
           mock_renderer.normalize_component_args!(opts)
           expect(opts[:component]).to end_with('pages/users/index/test')
         end
