@@ -3,9 +3,11 @@ module ComponentParty
   module ActionView
     class ComponentRenderer < ::ActionView::TemplateRenderer
       attr_reader :lookup_context
+      attr_reader :component_path
 
-      def initialize(lookup_context)
+      def initialize(lookup_context, component_path)
         lookup_context.view_paths.push(Rails.root.join(ComponentParty.configuration.components_path))
+        @component_path = component_path
         super(lookup_context)
       end
 
@@ -20,7 +22,7 @@ module ComponentParty
       end
 
       def decorate_template(template)
-        template
+        ComponentParty::ActionView::ComponentRenderer::TagWrapperDecorator.new(template, component_path)
       end
 
       def create_view_model(component_path, view_model_data, context)

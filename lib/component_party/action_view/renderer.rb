@@ -5,7 +5,7 @@ module ComponentParty #:nodoc:
       def render(context, options)
         if options.key?(:component)
           normalize_data_for_component_rendering!(context, options)
-          ComponentParty::ActionView::ComponentRenderer.new(lookup_context).render(context, options)
+          ComponentParty::ActionView::ComponentRenderer.new(lookup_context, options[:component]).render(context, options)
         else
           super(context, options)
         end

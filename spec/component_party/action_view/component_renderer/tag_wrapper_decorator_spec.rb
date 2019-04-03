@@ -8,9 +8,9 @@ describe ComponentParty::ActionView::ComponentRenderer::TagWrapperDecorator do
 
       expect(template).to receive(:render).and_return("<div>Component</div>")
 
-      decorated = ComponentParty::ActionView::ComponentRenderer::TagWrapperDecorator.new(template)
+      decorated = ComponentParty::ActionView::ComponentRenderer::TagWrapperDecorator.new(template, 'css_namespace/nesting')
 
-      rendered = decorated.render('ignores', { component: 'css_namespace/nesting'})
+      rendered = decorated.render('ignores', { })
 
       expect(rendered).to include('Component')
 

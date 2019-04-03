@@ -24,7 +24,7 @@ describe ComponentParty::ActionView::Renderer do
       expect(mock_renderer).to receive(:lookup_context).and_return(mock_lookup)
       expect(mock_component_renderer).to receive(:render).with('context', opts)
 
-      expect(ComponentParty::ActionView::ComponentRenderer).to receive(:new).with(mock_lookup).and_return(mock_component_renderer)
+      expect(ComponentParty::ActionView::ComponentRenderer).to receive(:new).with(mock_lookup, 'component-path').and_return(mock_component_renderer)
 
       mock_renderer.render('context', opts)
 
