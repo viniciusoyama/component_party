@@ -190,12 +190,12 @@ The component's template code:
 
 The methods available inside a template will be those defined in a view model.
 
-By default, we instantiate our `ComponentParty::Component::ViewModel` class to be the template's rendering context.
+By default, we instantiate our `ComponentParty::ViewModel` class to be the template's rendering context.
 
 This class takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one of them. Example:
 
 ```ruby
-vm = ComponentParty::Component::ViewModel.new(name: 'John', age: 12)
+vm = ComponentParty::ViewModel.new(name: 'John', age: 12)
 vm.name # John
 vm.age # 12
 ```
@@ -211,7 +211,7 @@ Suppose that we want a custom view model to have a random_greeting method.
 **app/components/header/view_model.rb**
 
 ```ruby
-class Header::ViewModel < ComponentParty::Component::ViewModel
+class Header::ViewModel < ComponentParty::ViewModel
   def random_greeting
     hi_text = ['Hi', 'Yo'].sample
     "#{hi_text}, #{user.name}"
@@ -228,7 +228,7 @@ Now the template can access the method like this:
 </header>
 ```
 
-Note that you *must* inherit from ComponentParty::Component::ViewModel in order to be compliant to the internal API that a view model must have. Also, it is not expected that you override the `initialize` method in your custom view model.
+Note that you *must* inherit from ComponentParty::ViewModel in order to be compliant to the internal API that a view model must have. Also, it is not expected that you override the `initialize` method in your custom view model.
 
 # Using helpers inside your components
 
@@ -255,7 +255,7 @@ As all view model methods are available to your template your will have access t
 Note that you can also use helpers inside your view model.
 
 ```ruby
-class Header::ViewModel < ComponentParty::Component::ViewModel
+class Header::ViewModel < ComponentParty::ViewModel
   def random_greeting
     hi_text = ['Hi', 'Yo'].sample
     "#{hi_text}, #{user.name}."
@@ -280,7 +280,7 @@ end
 When initializing the view model we provide two parameters (:c and :controller) so you can access the controller responsible for the current request.
 
 ```ruby
-class ControllerData::ViewModel < ComponentParty::Component::ViewModel
+class ControllerData::ViewModel < ComponentParty::ViewModel
 
   def formated_page
     "Current page: #{c.params[:page]}"

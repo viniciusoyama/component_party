@@ -24,14 +24,25 @@ module ComponentParty
         template
       end
 
-      def create_view_model(_component_path, view_model_data, context)
+      def create_view_model(component_path, view_model_data, context)
         view_model_data ||= {}
         view_model_data[:view] = context
 
-        # vm_class = find_custom_vm_class
-        vm_class ||= ComponentParty::ViewModel
+        vm_class = find_vm_class(component_path)
 
         vm_class.new(view_model_data)
+      end
+
+      def find_vm_class(component_path)
+        vm_file_path = Pathname.new(component_path).join(ComponentParty.configuration.view_model_file_name).to_s
+
+        vm_class = begin
+                     ActiveSupport::Inflector.camelize(vm_file_path).constantize
+                   rescue StandardError
+                     nil
+                   end
+
+        vm_class || ComponentParty::ViewModel
       end
 
       def template_path_from_component_path(component_path, template_file_name: ComponentParty.configuration.template_file_name)

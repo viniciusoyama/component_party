@@ -2,20 +2,16 @@ require 'rails_helper'
 
 describe ComponentParty::ActionView::ComponentRenderer do
   subject { described_class.new(
-    ActionView::LookupContext.new([])
+    ActionView::LookupContext.new([fixture_path('components')])
   )}
 
   describe '#initialize' do
     it 'Adds the component folder to the lookup context' do
-      expect(subject.lookup_context.view_paths.first.to_s).to end_with('app/components')
+      expect(subject.lookup_context.view_paths[1].to_s).to end_with('app/components')
     end
   end
 
   describe '#render' do
-    subject { described_class.new(
-      ActionView::LookupContext.new([fixture_path('components')])
-    )}
-
     it "renders the component template" do
       rendered = subject.render(double, { component: 'user_list'})
       expect(rendered).to include('Listing Users')
@@ -54,6 +50,18 @@ describe ComponentParty::ActionView::ComponentRenderer do
       expect(vm.view).to eq(context)
     end
   end
+
+
+  describe '#find_vm_class' do
+    it "returns a default instance if custom vm file doesn't exists" do
+      expect(subject.find_vm_class('component/without/vm')).to eq(ComponentParty::ViewModel)
+    end
+
+    it "searches for a constant with the vm path" do
+      expect(subject.find_vm_class('/with_vm')).to eq(WithVm::ViewModel)
+    end
+  end
+
   describe '#template_path_from_component_path' do
     it "Joins the component path with the default template file name" do
       allow(ComponentParty.configuration).to receive(:template_file_name).and_return('templatefile')

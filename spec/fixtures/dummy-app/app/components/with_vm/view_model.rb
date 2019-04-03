@@ -1,2 +1,2 @@
-class WithVm::ViewModel < ComponentParty::Component::ViewModel
+class WithVm::ViewModel < ComponentParty::ViewModel
 end
