@@ -1,6 +1,3 @@
-# rubocop:disable Metrics/LineLength
-# rubocop:disable Metrics/AbcSize
-
 module ComponentParty #:nodoc:
   # Renders a given component
   module ActionView
@@ -13,23 +10,13 @@ module ComponentParty #:nodoc:
           super(context, options)
         end
       end
-      # This method is part of the ActionController::Rendering module and only after
-      # all the attributes passed to the #render maethod are normalized
-      # An example of options argumento passed by Rails is
+
+      # An example of options argumento passed by Rails are
       # {
       #   :prefixes=>["devise/sessions", "devise", "application"],
       #   :template=>"new",
       #   :layout=> a Proc
       # }
-      # def render_to_body(options = {})
-      #   if options.key?(:component)
-      #     component_path = get_path_for_component_render_options(options)
-      #     render_component(path: component_path, view_model_data: options[:view_model_data], options: options)
-      #   else
-      #     super
-      #   end
-      # end
-
       def normalize_component_args!(options)
         if options[:component] == true
           options[:component] = Pathname.new(ComponentParty.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
@@ -49,26 +36,6 @@ module ComponentParty #:nodoc:
           options[:component]
         end
       end
-
-      # def render_component(path:, view_model_data:, options:)
-      #   view_model_data ||= {}
-      #   view_model_data = { c: self, controller: self }.merge(view_model_data)
-      #
-      #   ComponentParty::Component.new(
-      #     path: path,
-      #     view_model_data: view_model_data,
-      #     lookup_context: render_component_lookup_context
-      #   ).render(view_context, options)
-      # end
-      #
-      # private
-      #
-      # def render_component_lookup_context
-      #   view_paths.push(Rails.root.join(ComponentParty.configuration.components_path))
-      #   ActionView::LookupContext.new(view_paths)
-      # end
     end
   end
 end
-
-# rubocop:enable all
