@@ -5,7 +5,7 @@ class ViewComponent
     initializer 'view_component' do
       config.assets.paths << ::Rails.root.join(ComponentParty.configuration.components_path)
 
-      ::ActionController::Base.send(:prepend, ComponentParty::Controller::Rendering)
+      ::ActionView::Renderer.send(:prepend, ComponentParty::ActionView::Renderer)
       ::ActionView::Base.send(:include, ComponentParty::ImporterHelper)
     end
   end

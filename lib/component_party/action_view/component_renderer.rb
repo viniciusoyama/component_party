@@ -1,7 +1,7 @@
 module ComponentParty
   # Renders a given component
-  class Component
-    class Renderer < ActionView::TemplateRenderer
+  module ActionView
+    class ComponentRenderer < ::ActionView::TemplateRenderer
       class ComponentTemplateFileNotFound < StandardError; end
 
       # Decorates the template renderer chosen to render
@@ -13,9 +13,8 @@ module ComponentParty
         attr_reader :view_model
         attr_reader :component_path
 
-        def initialize(template, view_model, component_path)
-          super(template)
-          @view_model = view_model
+        def initialize(lookup_context, component_path)
+          super(lookup_context)
           @component_path = component_path
         end
 

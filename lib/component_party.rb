@@ -1,6 +1,7 @@
 require 'component_party/importer_helper'
 require 'component_party/view_model'
-require 'component_party/controller/rendering'
+require 'component_party/action_view/renderer'
+require 'component_party/action_view/component_renderer'
 
 module ComponentParty
   # Configuration class for ComponentParty
