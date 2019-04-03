@@ -27,23 +27,15 @@ describe ComponentParty::ImporterHelper do
         subject.Header(data: 2)
       end
 
-      it 'keeps current component path as nil if it\'s a normal template' do
-        expect(subject).to receive(:render).with(hash_including(current_component_path: nil))
-
+      it "renders with a caller_component_path independent of the current component value" do
+        subject.instance_variable_set('@current_component_path', 'parent-component-path')
         subject.import_component 'Header', path: 'my_path_to_header/folder'
+        subject.instance_variable_set('@current_component_path', 'child-component-path')
 
-        subject.Header()
-      end
-
-      it "passes the current component path" do
-        expect(subject).to receive(:current_component_path).and_return('current/path')
-        expect(subject).to receive(:render).with(hash_including(current_component_path: 'current/path'))
-
-        subject.import_component 'Header', path: 'my_path_to_header/folder'
+        expect(subject).to receive(:render).with(hash_including(caller_component_path: 'parent-component-path'))
 
         subject.Header(data: 2)
       end
-
     end
 
     it 'raises if there is no path' do

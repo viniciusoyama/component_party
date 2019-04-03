@@ -25,11 +25,6 @@ describe ComponentParty::ActionView::ComponentRenderer do
 
       expect(rendered).to include('View Model Number: two')
     end
-
-    it "passes the current_component_path as local" do
-      rendered = subject.render(double, { component: 'component_rendering_caller_testing', current_component_path: 'caller/path'})
-      expect(rendered).to include('Caller locals: caller/path')
-    end
   end
 
   describe '#create_view_model' do
