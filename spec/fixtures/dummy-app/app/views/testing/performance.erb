@@ -1,0 +1,39 @@
+<%
+  import_component 'PerformanceItemNoVM', path: '/performance/no_vm_item'
+  import_component 'PerformanceItemWithVM', path: '/performance/vm_item'
+%>
+
+<!-- Loading cache -->
+<%= PerformanceItemWithVM(name: 'TestName') %>
+<%= PerformanceItemNoVM(name: 'TestName') %>
+<%= render(file: '/testing/_performance_item', locals: { name: 'TestName' }) %>
+
+
+<%
+
+n_times = 50
+
+Benchmark.benchmark do |x|
+
+%>
+  <% normal = x.report("Normal Render:") do %>
+    <% n_times.times do %>
+      <%= render(file: '/testing/_performance_item', locals: { name: 'TestName' }) %>
+    <% end %>
+  <% end %>
+  <% no_vm = x.report("Component No VM:") do %>
+    <% n_times.times do %>
+      <%= PerformanceItemNoVM(name: 'TestName') %>
+    <% end %>
+  <% end %>
+  <% with_vm = x.report("Component WIth VM:")  do %>
+    <% n_times.times do %>
+      <%= PerformanceItemWithVM(name: 'TestName') %>
+    <% end %>
+  <% end %>
+
+  <span class='render-time'><%= normal.total %></span>
+  <span class='component-no-vm-time'><%= no_vm.total %></span>
+  <span class='component-with-vm-time'><%= with_vm.total %></span>
+
+<% end %>
