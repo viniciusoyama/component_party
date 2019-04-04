@@ -2,6 +2,11 @@ module ComponentParty #:nodoc:
   # Renders a given component
   module ActionView
     module Renderer
+      def initialize(*args)
+        super(*args)
+        lookup_context.view_paths.push(Rails.root.join(ComponentParty.configuration.components_path))
+      end
+
       def render(context, options)
         if options.key?(:component)
           normalize_data_for_component_rendering!(context, options)

@@ -6,7 +6,6 @@ module ComponentParty
       attr_reader :component_path
 
       def initialize(lookup_context, component_path)
-        lookup_context.view_paths.push(Rails.root.join(ComponentParty.configuration.components_path))
         @component_path = component_path
         super(lookup_context)
       end

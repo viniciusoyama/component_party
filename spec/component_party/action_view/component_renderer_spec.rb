@@ -6,12 +6,6 @@ describe ComponentParty::ActionView::ComponentRenderer do
     'my-component-path'
   )}
 
-  describe '#initialize' do
-    it 'Adds the component folder to the lookup context' do
-      expect(subject.lookup_context.view_paths[1].to_s).to end_with('app/components')
-    end
-  end
-
   describe '#render' do
     it "renders the component template" do
       rendered = subject.render(double, { component: 'user_list'})
