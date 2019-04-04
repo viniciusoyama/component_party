@@ -65,32 +65,12 @@ describe ComponentParty::ActionView::Renderer do
       end
     end
 
-    context 'when value is a path' do
-      context 'when path is absolute' do
-        it 'returns the path itself' do
-          opts = { component: 'path' }
-          mock_renderer.normalize_component_path!(context, opts)
-          expect(opts[:component]).to eq('path')
-        end
-      end
-
-      context 'when path is relative' do
-        it 'Appends the parent component when there is a current_component_path' do
-          opts = { component: './test', caller_component_path: 'pages/users/index' }
-
-          mock_renderer.normalize_component_path!(context, opts)
-          expect(opts[:component]).to end_with('pages/users/index/test')
-        end
-
-        it "raises an exception if i'm not inside a component" do
-          opts = { component: './test' }
-
-          expect {
-            mock_renderer.normalize_component_path!(context, { component: './test' })
-          }.to raise_error("You cannot use a relative component importing outside a component's template.")
-        end
-      end
-
+    context 'when value is a String' do
+      it 'returns the path itself' do
+        opts = { component: 'path' }
+        mock_renderer.normalize_component_path!(context, opts)
+        expect(opts[:component]).to eq('path')
+      end      
     end
 
     it 'Raises an error if component value is invalid' do
