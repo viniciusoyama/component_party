@@ -10,28 +10,10 @@ module ComponentParty
     def import_component(local_component_name, opts = {})
       raise "No path informed when importing component #{local_component_name}" if opts[:path].blank?
 
+      current_component_path = instance_variable_get('@current_component_path')
       define_singleton_method(local_component_name) do |**args|
-        create_component(opts[:path], args).render
+        render(component: opts[:path], view_model_data: args, caller_component_path: current_component_path)
       end
-    end
-
-    def create_component(component_path, view_model_data)
-      ComponentParty::Component.new(
-        path: component_path,
-        lookup_context: get_import_component_lookup_context_for(component_path),
-        view_model_data: view_model_data.merge(c: controller, controller: controller)
-      )
-    end
-
-    def get_import_component_lookup_context_for(path)
-      if path.starts_with?('./')
-        new_search_paths = component.lookup_context.view_paths.map do |vp|
-          Pathname.new(vp).join(component.path)
-        end
-        ActionView::LookupContext.new(new_search_paths)
-      end
-    rescue NameError
-      raise "You cannot use a relative component importing outside a component's template."
     end
   end
 end

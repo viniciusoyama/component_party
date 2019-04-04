@@ -69,7 +69,7 @@ app
 ```html
 <table>
   <tbody>
-    <% users.each do |user| %>
+    <% vm.users.each do |user| %>
       <tr>
         <td><%= user.name %></td>
       </tr>
@@ -158,7 +158,7 @@ The next example will look for a `sidebar` component inside the app/components/u
 
 # View Models: pass data to your components
 
-While rendering a component, you can pass data in a hash format. The data will automatically be exposed to your template.  
+While rendering a component, you can pass data in a hash format. The data will automatically be exposed to your template though a `vm` variable.  
 
 ```
 app
@@ -183,19 +183,17 @@ You have access to the my_user attribute in your component's template:
 The component's template code:
 
 ```html
-<p>Hello <%= my_user.name %></p>
+<p>Hello <%= vm.my_user.name %></p>
 ```
 
 ## How it works?
 
-The methods available inside a template will be those defined in a view model.
+The `vm` variable available in a template is an instance of a ViewModel.
 
-By default, we instantiate our `ComponentParty::Component::ViewModel` class to be the template's rendering context.
-
-This class takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one of them. Example:
+By default, we instantiate our `ComponentParty::ViewModel`. This class takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one of them. Example:
 
 ```ruby
-vm = ComponentParty::Component::ViewModel.new(name: 'John', age: 12)
+vm = ComponentParty::ViewModel.new(name: 'John', age: 12)
 vm.name # John
 vm.age # 12
 ```
@@ -211,7 +209,7 @@ Suppose that we want a custom view model to have a random_greeting method.
 **app/components/header/view_model.rb**
 
 ```ruby
-class Header::ViewModel < ComponentParty::Component::ViewModel
+class Header::ViewModel < ComponentParty::ViewModel
   def random_greeting
     hi_text = ['Hi', 'Yo'].sample
     "#{hi_text}, #{user.name}"
@@ -224,45 +222,45 @@ Now the template can access the method like this:
 **app/components/header/template.html.erb**
 ```html
 <header>
-  <%= random_greeting %>
+  <%= vm.random_greeting %>
 </header>
 ```
 
-Note that you *must* inherit from ComponentParty::Component::ViewModel in order to be compliant to the internal API that a view model must have. Also, it is not expected that you override the `initialize` method in your custom view model.
+Note that you *must* inherit from ComponentParty::ViewModel in order to be compliant to the internal API that a view model must have. Also, it is not expected that you override the `initialize` method in your custom view model.
 
 # Using helpers inside your components
 
-When initializing the view model we provide two parameters (:h and :helper) so you can access rails helpers.
+When initializing the view model we provide a `view` parameter so you can access Rails things (params, helpers, etc)
 
-As all view model methods are available to your template your will have access to a `h` or `helper` like this:
+The component's template is compiled using a normal rails view context so you have access to all helpers:
 
 ```
 <div class="child">
   <div class="date">
-    <%= helper.l(Date.new(2019, 01, 03)) %>
+    <%= l(Date.new(2019, 01, 03)) %>
   </div>
 
   <div class="routes">
-    <%= h.users_path %>
+    <%= users_path %>
   </div>
 
   <div class="translation">
-    <%= h.t('hello')%>
+    <%= t('hello')%>
   </div>
 </div>
 ```
 
-Note that you can also use helpers inside your view model.
+If you want to to access it inside a view model, just use the `view` method.
 
 ```ruby
-class Header::ViewModel < ComponentParty::Component::ViewModel
+class Header::ViewModel < ComponentParty::ViewModel
   def random_greeting
     hi_text = ['Hi', 'Yo'].sample
     "#{hi_text}, #{user.name}."
   end
 
   def formated_date
-    h.l(Date.today)
+    view.l(Date.today)
   end
 end
 ```
@@ -270,28 +268,27 @@ end
 **app/components/header/template.html.erb**
 ```html
 <header>
-  <%= random_greeting %> Today is <%= formated_date %>
+  <%= vm.random_greeting %> Today is <%= vm.formated_date %>
 </header>
 ```
 
 
 # Accessing params and other controller's methods
 
-When initializing the view model we provide two parameters (:c and :controller) so you can access the controller responsible for the current request.
 
 ```ruby
-class ControllerData::ViewModel < ComponentParty::Component::ViewModel
+class ControllerData::ViewModel < ComponentParty::ViewModel
 
   def formated_page
-    "Current page: #{c.params[:page]}"
+    "Current page: #{view.params[:page]}"
   end
 
   def formated_search
-    "Searching for: #{controller.params[:search]}"
+    "Searching for: #{view.params[:search]}"
   end
 
   def hello
-    "Hi #{controller.current_user.name}"
+    "Hi #{view.current_user.name}"
   end
 
 end
@@ -300,13 +297,13 @@ end
 **template.erb**
 
 ```html
-<%= hello %>
+<%= vm.hello %>
 
-<%= formated_search %>
+<%= vm.formated_search %>
 
-<%= formated_page %>
+<%= vm.formated_page %>
 
-<%= c.params[:search] %>
+<%= params[:search] %>
 ```
 
 # Rendering a component from a controller's action

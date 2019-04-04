@@ -1,11 +1,11 @@
-class ControllerData::ViewModel < ComponentParty::Component::ViewModel
+class ControllerData::ViewModel < ComponentParty::ViewModel
 
   def formated_page
-    "Current page: #{c.params[:page]}"
+    "Current page: #{view.params[:page]}"
   end
 
   def formated_search
-    "Searching for: #{controller.params[:search]}"
+    "Searching for: #{view.params[:search]}"
   end
 
 end
