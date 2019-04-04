@@ -8,6 +8,9 @@ class TestingController < ApplicationController
 
   end
 
+  def performance
+  end
+
   def custom_component
     render component: 'custom_controller', view_model_data: { custom_vm_data: 'custom vm data' }
   end
