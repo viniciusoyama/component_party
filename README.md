@@ -34,6 +34,12 @@ Add to your gemfile: `gem 'component_party'`
 ```
 app
 ├── components
+│   └── sidebar
+│       └── template.erb
+│       └── style.sass
+│   └── header
+│       └── template.erb
+│       └── style.sass
 │   └── pages
 │       └── users
 │           └── index
@@ -78,8 +84,6 @@ app
 </table>
 ```
 
-and so on...
-
 3) Render a component from your controller
 
 ```ruby
@@ -93,7 +97,7 @@ class UsersController < ApplicationController
 end
 ```
 
-4) Customize css only for a given component
+4) Customize and namespace your css for a given component
 
 **app/components/pages/users/list/style.sass**
 
@@ -122,7 +126,7 @@ app
 │           └── template.html.erb
 ```
 
-You can import a component inside a layout, view or in a component's template file.
+You can import a component inside a layout, view or a component's template.
 
 ## Absolute importing
 
@@ -188,7 +192,7 @@ The component's template code:
 
 ## How it works?
 
-The `vm` variable available in a template is an instance of a ViewModel.
+The `vm` variable is an instance of a ViewModel.
 
 By default, we instantiate our `ComponentParty::ViewModel`. This class takes all the constructor arguments (it must be a hash/named args) and creates a getter for each one of them. Example:
 
@@ -225,9 +229,9 @@ While importing our Header component we can pass a `custom_view_model` option to
 <%= Header(name: 'John') %>
 ```
 
-By default we will use our own view model. But if you pass a `custom_view_model` attribute as `true` the rendering process will look for a class following all the Rails naming conventions.
+By default we will use our own view model. But if you pass the `custom_view_model` options as `true` the rendering process will look for a class following all the Rails naming conventions.
 
-Also, if you want, you can pass any class to be used as a view model. Instead of `true` just use the class itself:
+Also, you can use any class as a view model. Instead of `true` just use the class itself:
 
 ```html
 <%
@@ -237,19 +241,21 @@ Also, if you want, you can pass any class to be used as a view model. Instead of
 <%= Header(name: 'John') %>
 ```
 
+*PS:* You need to pass the class and not an instance of it.
+
 Note that a view model *must* inherit from ComponentParty::ViewModel in order to be compliant to the internal API that a view model must have. Also, it is not expected that you override the `initialize` method in your custom view model.
 
-*Is it possible to (by default) automatically search for a custom view model and, if not found, just use the default one instead?*
+**Is it possible to (by default) automatically search for a custom view model and, if not found, just use the default one instead?**
+
 Yes, it would be possible to avoid the need of you passing a `custom_view_model` option but we don't like this approach for 2 main reasons:
 
-1) This feature would make the rendering process at least 3 times slower.
-2) We think it's better to make things more explicitly for who is reading your code.
+1) This feature would make the rendering process much slower.
+
+2) We think it's better to do things more explicitly for who is reading your code.
 
 # Using helpers inside your components
 
-When initializing the view model we provide a `view` parameter so you can access Rails things (params, helpers, etc)
-
-The component's template is compiled using a normal rails view context so you have access to all helpers:
+The component's template is compiled using a normal rails view context so you have access to all helpers/params/routes/etc:
 
 ```
 <div class="child">
@@ -271,11 +277,6 @@ If you want to to access it inside a view model, just use the `view` method.
 
 ```ruby
 class Header::ViewModel < ComponentParty::ViewModel
-  def random_greeting
-    hi_text = ['Hi', 'Yo'].sample
-    "#{hi_text}, #{user.name}."
-  end
-
   def formated_date
     view.l(Date.today)
   end
@@ -285,7 +286,7 @@ end
 **app/components/header/template.html.erb**
 ```html
 <header>
-  <%= vm.random_greeting %> Today is <%= vm.formated_date %>
+  Today is <%= vm.formated_date %>
 </header>
 ```
 
@@ -294,7 +295,7 @@ end
 
 
 ```ruby
-class ControllerData::ViewModel < ComponentParty::ViewModel
+class Header::ViewModel < ComponentParty::ViewModel
 
   def formated_page
     "Current page: #{view.params[:page]}"
@@ -358,7 +359,7 @@ Note that we will add **pages** before the default controller+action path.
 
 **Can I make the gem render a component instead of a view by default?**
 
-We though about doing this but even if the default behavior was to render a component instead of a view, you would have to pass the view model data in the action using some kind of trick like:
+We though about doing this but - even if the default behavior was to render a component instead of a view - you would have to pass the view model data in the action using some kind of trick like:
 
 ```
 def index
