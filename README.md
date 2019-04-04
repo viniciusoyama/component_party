@@ -202,9 +202,7 @@ When a view model is instantiated we pass the all arguments that you provided wh
 
 ## Create your own ViewModel and handle complex view logic
 
-We only use our own view model if there is no view_model.rb file inside your component's folder. This file should declare a class following all the Rails naming conventions.
-
-Suppose that we want a custom view model to have a random_greeting method.
+Suppose that we want to use a custom view model (inside our header component's folder).
 
 **app/components/header/view_model.rb**
 
@@ -217,16 +215,35 @@ class Header::ViewModel < ComponentParty::ViewModel
 end
 ```
 
-Now the template can access the method like this:
+While importing our Header component we can pass a `custom_view_model` option to the import directive.
 
-**app/components/header/template.html.erb**
 ```html
-<header>
-  <%= vm.random_greeting %>
-</header>
+<%
+  import_component 'Header', path: 'header', custom_view_model: true
+%>
+
+<%= Header(name: 'John') %>
 ```
 
-Note that you *must* inherit from ComponentParty::ViewModel in order to be compliant to the internal API that a view model must have. Also, it is not expected that you override the `initialize` method in your custom view model.
+By default we will use our own view model. But if you pass a `custom_view_model` attribute as `true` the rendering process will look for a class following all the Rails naming conventions.
+
+Also, if you want, you can pass any class to be used as a view model. Instead of `true` just use the class itself:
+
+```html
+<%
+  import_component 'Header', path: 'header', custom_view_model: MyCustomClass
+%>
+
+<%= Header(name: 'John') %>
+```
+
+Note that a view model *must* inherit from ComponentParty::ViewModel in order to be compliant to the internal API that a view model must have. Also, it is not expected that you override the `initialize` method in your custom view model.
+
+*Is it possible to (by default) automatically search for a custom view model and, if not found, just use the default one instead?*
+Yes, it would be possible to avoid the need of you passing a `custom_view_model` option but we don't like this approach for 2 main reasons:
+
+1) This feature would make the rendering process at least 3 times slower.
+2) We think it's better to make things more explicitly for who is reading your code.
 
 # Using helpers inside your components
 
