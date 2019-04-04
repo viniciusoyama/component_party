@@ -18,12 +18,6 @@ describe ComponentParty::ActionView::Renderer do
     end.new(ActionView::LookupContext.new([]))
   }
 
-  describe '#initialize' do
-    it 'Adds the component folder to the lookup context' do
-      expect(mock_renderer.lookup_context.view_paths[0].to_s).to end_with('app/components')
-    end
-  end
-
   describe '#render' do
     it "calls super if there is no component to be rendered" do
       expect(mock_renderer.render('context', {})).to eq('original-render')
