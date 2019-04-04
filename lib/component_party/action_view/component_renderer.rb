@@ -12,7 +12,7 @@ module ComponentParty
 
       def render(context, options)
         options[:file] = template_path_from_component_path(options[:component])
-        options[:locals] = { vm: create_view_model(options[:component], options[:view_model_data], context) }
+        options[:locals] = { vm: create_view_model(context, options) }
         super(context, options)
       end
 
@@ -24,25 +24,26 @@ module ComponentParty
         ComponentParty::ActionView::ComponentRenderer::TagWrapperDecorator.new(template, component_path)
       end
 
-      def create_view_model(component_path, view_model_data, context)
-        view_model_data ||= {}
+      def create_view_model(context, options)
+        view_model_data = options[:view_model_data] || {}
         view_model_data[:view] = context
 
-        vm_class = find_vm_class(component_path)
+        vm_class = find_vm_class(options)
 
         vm_class.new(view_model_data)
       end
 
-      def find_vm_class(component_path)
-        vm_file_path = Pathname.new(component_path).join(ComponentParty.configuration.view_model_file_name).to_s
-
-        vm_class = begin
-                     ActiveSupport::Inflector.camelize(vm_file_path).constantize
-                   rescue StandardError
-                     nil
-                   end
-
-        vm_class || ComponentParty::ViewModel
+      def find_vm_class(options)
+        if options[:custom_view_model]
+          if options[:custom_view_model] === true
+            vm_file_path = Pathname.new(options[:component]).join(ComponentParty.configuration.view_model_file_name).to_s
+            ActiveSupport::Inflector.camelize(vm_file_path).constantize
+          else
+            options[:custom_view_model]
+          end
+        else
+          ComponentParty::ViewModel
+        end
       end
 
       def template_path_from_component_path(component_path, template_file_name: ComponentParty.configuration.template_file_name)

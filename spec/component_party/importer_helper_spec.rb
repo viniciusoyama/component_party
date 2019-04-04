@@ -39,6 +39,24 @@ describe ComponentParty::ImporterHelper do
         end
       end
 
+      context 'ViewModel customization' do
+        it "sets custom_view_model to false if none is provided" do
+            subject.import_component 'Test', path: 'test'
+
+            expect(subject).to receive(:render).with(hash_including(custom_view_model: false))
+
+            subject.Test()
+        end
+
+        it "passes the custom_view_model as option" do
+          subject.import_component 'Test', path: 'test', custom_view_model: 'customvm'
+
+          expect(subject).to receive(:render).with(hash_including(custom_view_model: 'customvm'))
+
+          subject.Test()
+        end
+      end
+
       it "passes the view model data" do
         expect(subject).to receive(:render).with(hash_including(view_model_data: { data: 2 }))
 

@@ -15,7 +15,7 @@ module ComponentParty
       component_to_render_path = get_full_component_path(opts[:path])
 
       define_singleton_method(local_component_name) do |**args|
-        render(component: component_to_render_path, view_model_data: args)
+        render(component: component_to_render_path, view_model_data: args, custom_view_model: (opts[:custom_view_model] || false))
       end
     end
 
