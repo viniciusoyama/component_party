@@ -56,7 +56,7 @@ describe ComponentParty::ActionView::ComponentRenderer do
     end
 
     context 'when custom view model options exists' do
-      it "searches for a constant with the vm path if option === true" do
+      it "searches for a constant with the vm path if option == true" do
         expect(subject.find_vm_class({ component: 'with_vm', custom_view_model: true })).to eq(WithVm::ViewModel)
       end
 

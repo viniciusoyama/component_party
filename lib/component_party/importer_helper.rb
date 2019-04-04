@@ -10,8 +10,6 @@ module ComponentParty
     def import_component(local_component_name, opts = {})
       raise "No path informed when importing component #{local_component_name}" if opts[:path].blank?
 
-      current_component_path = instance_variable_get('@current_component_path')
-
       component_to_render_path = get_full_component_path(opts[:path])
 
       define_singleton_method(local_component_name) do |**args|
@@ -20,6 +18,7 @@ module ComponentParty
     end
 
     private
+
     def get_full_component_path(path)
       if path.starts_with?('./')
         current_component_path = instance_variable_get('@current_component_path')

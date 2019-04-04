@@ -22,9 +22,8 @@ module ComponentParty #:nodoc:
       #   :template=>"new",
       #   :layout=> a Proc
       # }
-      # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/LineLength
-      def normalize_component_path!(context, options)
+      def normalize_component_path!(_context, options)
         if options[:component] == true
           options[:component] = Pathname.new(ComponentParty.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
         else

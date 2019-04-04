@@ -35,7 +35,7 @@ module ComponentParty
 
       def find_vm_class(options)
         if options[:custom_view_model]
-          if options[:custom_view_model] === true
+          if options[:custom_view_model] == true
             vm_file_path = Pathname.new(options[:component]).join(ComponentParty.configuration.view_model_file_name).to_s
             ActiveSupport::Inflector.camelize(vm_file_path).constantize
           else

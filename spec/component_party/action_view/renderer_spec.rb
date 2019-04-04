@@ -57,7 +57,7 @@ describe ComponentParty::ActionView::Renderer do
   end
 
   describe '#normalize_component_path!' do
-    context 'when component === true (using default route)' do
+    context 'when component == true (using default route)' do
       it 'Uses the current controller/action name' do
         opts = { component: true, prefixes: ['users'], template: 'index' }
         mock_renderer.normalize_component_path!(context, opts)
