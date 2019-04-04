@@ -27,10 +27,8 @@ module ComponentParty #:nodoc:
       def normalize_component_path!(context, options)
         if options[:component] == true
           options[:component] = Pathname.new(ComponentParty.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
-        elsif options[:component].is_a?(String)
-          options[:component]
         else
-          raise "Wrong value for 'component' key while calling render method. Argument class is #{options[:component].class}. Only String or true values are expected."
+          options[:component]
         end
       end
       # rubocop:enable all

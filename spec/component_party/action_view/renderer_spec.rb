@@ -70,13 +70,7 @@ describe ComponentParty::ActionView::Renderer do
         opts = { component: 'path' }
         mock_renderer.normalize_component_path!(context, opts)
         expect(opts[:component]).to eq('path')
-      end      
-    end
-
-    it 'Raises an error if component value is invalid' do
-      expect {
-        mock_renderer.normalize_component_path!(context, component: Object.new)
-      }.to raise_error("Wrong value for 'component' key while calling render method. Argument class is Object. Only String or true values are expected.")
+      end
     end
   end
 end
