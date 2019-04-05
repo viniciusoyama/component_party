@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'component_party'
-  s.version     = '0.6.0'
+  s.version     = '0.7.0'
   s.date        = '2019-03-28'
   s.summary     = 'Stop using views: frontend components architecture for Ruby on Rails.'
   s.description = 'Frontend components for Ruby on Rails: group your view logic, html and css files in components to be rendered from views or directly from controllers.'
