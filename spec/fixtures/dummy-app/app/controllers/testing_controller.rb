@@ -12,6 +12,6 @@ class TestingController < ApplicationController
   end
 
   def custom_component
-    render component: 'custom_controller', view_model_data: { custom_vm_data: 'custom vm data' }
+    render component: 'custom_controller', view_model_data: { custom_vm_data: 'custom vm data' }, custom_view_model: true
   end
 end

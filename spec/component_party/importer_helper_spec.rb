@@ -11,12 +11,50 @@ describe ComponentParty::ImporterHelper do
 
   describe '#import_component' do
     describe 'generated component method' do
-      it "calls render component" do
-        expect(subject).to receive(:render).with(hash_including(component: 'my_path_to_header/folder'))
+      context 'path is absolute' do
+        it "calls render with the absolute path" do
+          expect(subject).to receive(:render).with(hash_including(component: 'my_path_to_header/folder'))
 
-        subject.import_component 'Header', path: 'my_path_to_header/folder'
+          subject.import_component 'Header', path: 'my_path_to_header/folder'
 
-        subject.Header()
+          subject.Header()
+        end
+      end
+
+      context 'path is relative' do
+        it 'Appends the parent component when there is a current_component_path' do
+          subject.instance_variable_set('@current_component_path', 'pages/users/index')
+
+          subject.import_component 'Test', path: './test'
+
+          expect(subject).to receive(:render).with(hash_including(component: 'pages/users/index/test'))
+
+          subject.Test()
+        end
+
+        it "raises an exception if i'm not inside a component" do
+          expect {
+            subject.import_component 'Test', path: './test'
+          }.to raise_error("You cannot use a relative component importing outside a component's template.")
+        end
+      end
+
+      context 'ViewModel customization' do
+        it "sets custom_view_model to false if none is provided" do
+            subject.import_component 'Test', path: 'test'
+
+            expect(subject).to receive(:render).with(hash_including(custom_view_model: false))
+
+            subject.Test()
+        end
+
+        it "passes the custom_view_model as option" do
+          subject.import_component 'Test', path: 'test', custom_view_model: 'customvm'
+
+          expect(subject).to receive(:render).with(hash_including(custom_view_model: 'customvm'))
+
+          subject.Test()
+        end
       end
 
       it "passes the view model data" do
@@ -27,15 +65,6 @@ describe ComponentParty::ImporterHelper do
         subject.Header(data: 2)
       end
 
-      it "renders with a caller_component_path independent of the current component value" do
-        subject.instance_variable_set('@current_component_path', 'parent-component-path')
-        subject.import_component 'Header', path: 'my_path_to_header/folder'
-        subject.instance_variable_set('@current_component_path', 'child-component-path')
-
-        expect(subject).to receive(:render).with(hash_including(caller_component_path: 'parent-component-path'))
-
-        subject.Header(data: 2)
-      end
     end
 
     it 'raises if there is no path' do
@@ -44,6 +73,5 @@ describe ComponentParty::ImporterHelper do
       }.to raise_error('No path informed when importing component Header')
     end
   end
-
 
 end

@@ -14,9 +14,10 @@ describe ComponentParty::ActionView::ComponentRenderer do
 
     it "passes the vm as locals" do
       context = double('view context')
-      expect(subject).to receive(:create_view_model).with('component_rendering_vm_testing', { number: 'two' }, context).and_return(OpenStruct.new(number: 'two'))
+      opts = { component: 'component_rendering_vm_testing', view_model_data: { number: 'two' } }
+      expect(subject).to receive(:create_view_model).with(context, opts).and_return(OpenStruct.new(number: 'two'))
 
-      rendered = subject.render(context, { component: 'component_rendering_vm_testing', view_model_data: { number: 'two' }})
+      rendered = subject.render(context, opts)
 
       expect(rendered).to include('View Model Number: two')
     end
@@ -24,19 +25,20 @@ describe ComponentParty::ActionView::ComponentRenderer do
 
   describe '#create_view_model' do
     let(:context) { double('view-context') }
+    let(:options) { {component: 'component_path', view_model_data: { key: 'value' }} }
 
     it 'Creates a empty view_model if no data is passed' do
-      vm = subject.create_view_model('componentn_path', nil, context)
+      vm = subject.create_view_model(context, options)
       expect(vm).to be_an_instance_of(ComponentParty::ViewModel)
     end
 
     it 'Configures the view_model with data' do
-      vm = subject.create_view_model('componentn_path', { key: 'value' }, context)
+      vm = subject.create_view_model(context, options)
       expect(vm.key).to eq('value')
     end
 
     it 'Configures the view_model with context' do
-      vm = subject.create_view_model('componentn_path', { key: 'value' }, context)
+      vm = subject.create_view_model(context, options)
       expect(vm.view).to eq(context)
     end
   end
@@ -46,12 +48,21 @@ describe ComponentParty::ActionView::ComponentRenderer do
   end
 
   describe '#find_vm_class' do
-    it "returns a default instance if custom vm file doesn't exists" do
-      expect(subject.find_vm_class('component/without/vm')).to eq(ComponentParty::ViewModel)
+    context 'when there is no custom view model option' do
+      it "returns a default instance" do
+        expect(subject.find_vm_class({ component: 'component/without/vm' })).to eq(ComponentParty::ViewModel)
+        expect(subject.find_vm_class({ component: 'with_vm' })).to eq(ComponentParty::ViewModel)
+      end
     end
 
-    it "searches for a constant with the vm path" do
-      expect(subject.find_vm_class('/with_vm')).to eq(WithVm::ViewModel)
+    context 'when custom view model options exists' do
+      it "searches for a constant with the vm path if option == true" do
+        expect(subject.find_vm_class({ component: 'with_vm', custom_view_model: true })).to eq(WithVm::ViewModel)
+      end
+
+      it "uses the option itself otherwise" do
+        expect(subject.find_vm_class({ component: 'with_vm', custom_view_model: WithVm::VmOnOptions })).to eq(WithVm::VmOnOptions)
+      end
     end
   end
 
