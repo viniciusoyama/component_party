@@ -377,32 +377,37 @@ render component: true
 
 # Style namespacing: css scoped by component
 
-## How to write my css?
-Each rendered component will be wrapped inside a div with a dynamic data attribute storing the component path. This means that you can create custom css for each component. Example:
+Your template **must** have only one root node in order to your component be namespaced.
+
+Each rendered component will have its first HTML node changed with a dynamic data attribute storing the component path. This means that you can create custom css for each component. Example:
 
 ```
 app
 ├── components
-│   └── shared_stuff
+│   └── admin_layout
 │       └── header
 │           └── template.html.erb
 │           └── style.css
 ```
 
+```html
+<section>
+  <h1>Hello <%= vm.user_name%></h1>
+</section>
+```
+
 When we render the header it will generate a HTML like this
 
 ```html
-
-<div class='component' data-component-path='shared_stuff-header'>
-  => content in header/template.html.erb
-</div>
-
+<section data-component-path='admin_layout-header'>
+  <h1>Hello <%= vm.user_name%></h1>
+</section>
 ```
 
 Then you can customize the component with the following css:
 
 ```css
-[data-component-path=shared_stuff-header] {
+[data-component-path=admin_layout-header] {
   background: red;
 }
 ```
