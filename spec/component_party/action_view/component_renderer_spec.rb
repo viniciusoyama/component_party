@@ -9,6 +9,7 @@ describe ComponentParty::ActionView::ComponentRenderer do
   describe '#render' do
     it "renders the component template" do
       rendered = subject.render(double, { component: 'user_list'})
+
       expect(rendered).to include('Listing Users')
     end
 
