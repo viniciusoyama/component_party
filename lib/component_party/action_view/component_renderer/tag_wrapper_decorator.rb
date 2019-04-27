@@ -18,6 +18,9 @@ class ComponentParty::ActionView::ComponentRenderer::TagWrapperDecorator < Simpl
 
   def apply_html_namespacing(raw_html)
     component_id = component_path.to_s.gsub(%r{^/}, '').tr('/', '-')
-    "<div class='component' data-component-path='#{component_id}'>" + raw_html + '</div>'.html_safe
+    html_tag_end_regex = %r{(/?)>}
+    raw_html.sub(html_tag_end_regex) do
+      " data-component-path='#{component_id}' #{Regexp.last_match(1)}>"
+    end.html_safe
   end
 end
