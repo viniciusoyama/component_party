@@ -2,13 +2,11 @@ module ComponentParty #:nodoc:
   # Renders a given component
   module ActionView
     module Renderer
-
-      method_to_override = if Rails::VERSION::STRING.start_with?("6")
-        'render_to_object'
-      else
-        'render'
-      end
-
+      method_to_override = if Rails::VERSION::STRING.start_with?('6')
+                             'render_to_object'
+                           else
+                             'render'
+                           end
 
       define_method(method_to_override) do |context, options|
         if options.key?(:component)

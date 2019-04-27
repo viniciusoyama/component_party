@@ -16,7 +16,7 @@ module ComponentParty
         super(context, options)
       end
 
-      if Rails::VERSION::STRING.start_with?("6")
+      if Rails::VERSION::STRING.start_with?('6')
         def render_template(context, template, layout_name = nil, locals = nil) #:nodoc:
           super(context, decorate_template(template), layout_name, locals)
         end
@@ -25,7 +25,6 @@ module ComponentParty
           super(decorate_template(template), layout_name, locals)
         end
       end
-
 
       def decorate_template(template)
         ComponentParty::ActionView::ComponentRenderer::TagWrapperDecorator.new(template, component_path)
