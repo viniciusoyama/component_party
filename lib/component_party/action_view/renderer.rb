@@ -3,7 +3,7 @@ module ComponentParty #:nodoc:
   module ActionView
     module Renderer
       def render_to_object(context, options)
-        rendered = if options.key?(:component)
+        if options.key?(:component)
           normalize_data_for_component_rendering!(context, options)
           ComponentParty::ActionView::ComponentRenderer.new(lookup_context, options[:component]).render(context, options)
         else
@@ -22,7 +22,6 @@ module ComponentParty #:nodoc:
       #   :template=>"new",
       #   :layout=> a Proc
       # }
-      # rubocop:disable Metrics/LineLength
       def normalize_component_path!(_context, options)
         if options[:component] == true
           options[:component] = Pathname.new(options[:prefixes].first.to_s).join(options[:template]).to_s
@@ -32,7 +31,6 @@ module ComponentParty #:nodoc:
           options[:prefixes] = []
         end
       end
-      # rubocop:enable all
     end
   end
 end

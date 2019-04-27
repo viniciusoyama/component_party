@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'Benchmart: Render time', type: :integration do
+describe 'Benchmark: Render time', type: :integration do
 
   it 'is at most 5x slower than the original render :file from rails' do
     visit '/testing/performance'

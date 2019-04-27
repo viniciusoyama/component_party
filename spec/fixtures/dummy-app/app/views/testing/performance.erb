@@ -6,7 +6,7 @@
 <!-- Loading cache -->
 <%= PerformanceItemWithVM(name: 'TestName') %>
 <%= PerformanceItemNoVM(name: 'TestName') %>
-<%= render(file: '/testing/_performance_item', locals: { name: 'TestName' }) %>
+<%= render(template: '/testing/_performance_item', locals: { name: 'TestName' }) %>
 
 
 <%
@@ -18,7 +18,7 @@ Benchmark.benchmark do |x|
 %>
   <% normal = x.report("Normal Render:") do %>
     <% n_times.times do %>
-      <%= render(file: '/testing/_performance_item', locals: { name: 'TestName' }) %>
+      <%= render(template: '/testing/_performance_item', locals: { name: 'TestName' }) %>
     <% end %>
   <% end %>
   <% no_vm = x.report("Component No VM:") do %>
