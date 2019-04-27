@@ -15,12 +15,22 @@ describe ComponentParty::ActionView::Renderer do
       def render_to_object(context, opts = {})
          "original-render"
       end
+
+      def render(context, opts = {})
+         "original-render"
+      end
     end.new(ActionView::LookupContext.new([]))
   }
 
-  describe '#render_to_object' do
+  method_to_test = if Rails::VERSION::STRING.start_with?("6")
+    "render_to_object"
+  else
+    "render"
+  end
+
+  describe('#' + method_to_test) do
     it "calls super if there is no component to be rendered" do
-      expect(mock_renderer.render_to_object('context', {})).to eq('original-render')
+      expect(mock_renderer.send(method_to_test, 'context', {})).to eq('original-render')
     end
 
     it "renders a component if key is provided" do
@@ -32,7 +42,7 @@ describe ComponentParty::ActionView::Renderer do
 
       expect(ComponentParty::ActionView::ComponentRenderer).to receive(:new).with(mock_lookup, 'component-path').and_return(mock_component_renderer)
 
-      mock_renderer.render_to_object('context', opts)
+      mock_renderer.send(method_to_test, 'context', opts)
 
     end
   end

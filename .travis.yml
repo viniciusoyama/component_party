@@ -6,6 +6,7 @@ env:
     - "RAILS_VERSION=5.0.0"
     - "RAILS_VERSION=5.1.0"
     - "RAILS_VERSION=5.2.0"
+    - "RAILS_VERSION=6.0.0.rc1"
 
 language: ruby
 

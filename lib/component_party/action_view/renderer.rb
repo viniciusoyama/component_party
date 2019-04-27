@@ -2,7 +2,15 @@ module ComponentParty #:nodoc:
   # Renders a given component
   module ActionView
     module Renderer
-      def render_to_object(context, options)
+
+      method_to_override = if Rails::VERSION::STRING.start_with?("6")
+        'render_to_object'
+      else
+        'render'
+      end
+
+
+      define_method(method_to_override) do |context, options|
         if options.key?(:component)
           normalize_data_for_component_rendering!(context, options)
           ComponentParty::ActionView::ComponentRenderer.new(lookup_context, options[:component]).render(context, options)
