@@ -14,7 +14,7 @@ cache:
   bundler: true
 
 rvm:
- - "2.4.1"
+ - "2.5.0"
 
 bundler_args: "--binstubs --standalone --without documentation --path ../bundle"
 
