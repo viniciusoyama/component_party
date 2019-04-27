@@ -8,16 +8,16 @@ describe ComponentParty::ActionView::ComponentRenderer do
 
   describe '#render' do
     it "renders the component template" do
-      rendered = subject.render(double, { component: 'user_list'})
+      rendered = subject.render( ActionView::Base.new, { component: 'user_list'}).body
       expect(rendered).to include('Listing Users')
     end
 
     it "passes the vm as locals" do
-      context = double('view context')
+      context = ActionView::Base.new
       opts = { component: 'component_rendering_vm_testing', view_model_data: { number: 'two' } }
       expect(subject).to receive(:create_view_model).with(context, opts).and_return(OpenStruct.new(number: 'two'))
 
-      rendered = subject.render(context, opts)
+      rendered = subject.render(context, opts).body
 
       expect(rendered).to include('View Model Number: two')
     end

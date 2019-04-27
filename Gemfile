@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'yard', '~> 0.9.9', require: false
 
-rails_version = ENV['RAILS_VERSION'] || 'default'
+rails_version = ENV['RAILS_VERSION'] || '6.0.0.rc1'
 
 rails = case rails_version
         when 'master'

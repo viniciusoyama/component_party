@@ -2,8 +2,8 @@ module ComponentParty #:nodoc:
   # Renders a given component
   module ActionView
     module Renderer
-      def render(context, options)
-        if options.key?(:component)
+      def render_to_object(context, options)
+        rendered = if options.key?(:component)
           normalize_data_for_component_rendering!(context, options)
           ComponentParty::ActionView::ComponentRenderer.new(lookup_context, options[:component]).render(context, options)
         else
@@ -25,9 +25,11 @@ module ComponentParty #:nodoc:
       # rubocop:disable Metrics/LineLength
       def normalize_component_path!(_context, options)
         if options[:component] == true
-          options[:component] = Pathname.new(ComponentParty.configuration.component_folder_for_actions).join(options[:prefixes].first.to_s, options[:template]).to_s
+          options[:component] = Pathname.new(options[:prefixes].first.to_s).join(options[:template]).to_s
+          options[:prefixes] = [ComponentParty.configuration.component_folder_for_actions]
         else
           options[:component]
+          options[:prefixes] = []
         end
       end
       # rubocop:enable all

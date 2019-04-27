@@ -21,9 +21,9 @@ describe 'Controller Component Rendering', type: :integration do
     expect(page).to_not have_content('I\'m application layout.')
   end
 
-  it 'Allows default rendering according to the action name' do
+  it 'Allows rendering with custom component' do
     visit '/testing/custom_component'
-  
+
     expect(page).to have_content('custom component for action')
     expect(page).to have_content('Customizado custom vm data')
   end
