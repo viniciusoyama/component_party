@@ -2,10 +2,11 @@ env:
   global:
     - CC_TEST_REPORTER_ID=2373c9fa7226b98ccf8bef72f133bc37b4cef57085c027e144a3b2fc71ce7558
   matrix:
-    - "RAILS_VERSION=4.2.0"
-    - "RAILS_VERSION=5.0.0"
-    - "RAILS_VERSION=5.1.0"
-    - "RAILS_VERSION=5.2.0"
+    - "RAILS_VERSION=4.2.0 BUNDLER_VERSION=1.17.3"
+    - "RAILS_VERSION=5.0.0 BUNDLER_VERSION=2.0.2"
+    - "RAILS_VERSION=5.1.0 BUNDLER_VERSION=2.0.2"
+    - "RAILS_VERSION=5.2.0 BUNDLER_VERSION=2.0.2"
+    - "RAILS_VERSION=6.0.0 BUNDLER_VERSION=2.0.2"
 
 language: ruby
 
@@ -13,11 +14,12 @@ cache:
   bundler: true
 
 rvm:
- - "2.4.1"
+ - "2.5.0"
 
 bundler_args: "--binstubs --standalone --without documentation --path ../bundle"
 
 before_install:
+  - gem install -v ${BUNDLER_VERSION} bundler --no-rdoc --no-ri
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
 

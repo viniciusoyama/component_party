@@ -7,7 +7,7 @@ describe 'Component rendering from view', type: :view do
     users << OpenStruct.new(name: 'Pedro')
     assign(:users, users)
 
-    render file: 'testing/user_listing'
+    render template: 'testing/user_listing'
   end
 
   it 'Allows multiple renderings per view' do

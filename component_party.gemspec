@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
-  s.add_dependency 'rails', '>= 4.2.0', '< 6'
+  s.add_dependency 'rails', '>= 4.2', '<= 6.0'
 
   # Quality Control
   s.add_development_dependency 'rspec'

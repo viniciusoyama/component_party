@@ -12,15 +12,25 @@ describe ComponentParty::ActionView::Renderer do
         @lookup_context = lookup_context
       end
 
+      def render_to_object(context, opts = {})
+         "original-render"
+      end
+
       def render(context, opts = {})
          "original-render"
       end
     end.new(ActionView::LookupContext.new([]))
   }
 
-  describe '#render' do
+  method_to_test = if Rails::VERSION::STRING.start_with?("6")
+    "render_to_object"
+  else
+    "render"
+  end
+
+  describe('#' + method_to_test) do
     it "calls super if there is no component to be rendered" do
-      expect(mock_renderer.render('context', {})).to eq('original-render')
+      expect(mock_renderer.send(method_to_test, 'context', {})).to eq('original-render')
     end
 
     it "renders a component if key is provided" do
@@ -32,7 +42,7 @@ describe ComponentParty::ActionView::Renderer do
 
       expect(ComponentParty::ActionView::ComponentRenderer).to receive(:new).with(mock_lookup, 'component-path').and_return(mock_component_renderer)
 
-      mock_renderer.render('context', opts)
+      mock_renderer.send(method_to_test, 'context', opts)
 
     end
   end
@@ -58,18 +68,24 @@ describe ComponentParty::ActionView::Renderer do
 
   describe '#normalize_component_path!' do
     context 'when component == true (using default route)' do
-      it 'Uses the current controller/action name' do
+      it 'changes the option to be the current controller/action path' do
         opts = { component: true, prefixes: ['users'], template: 'index' }
         mock_renderer.normalize_component_path!(context, opts)
-        expect(opts[:component]).to eq('pages/users/index')
+        expect(opts[:component]).to eq('users/index')
+      end
+
+      it "Sets pages as preffix" do
+        opts = { component: true, prefixes: ['users'], template: 'index' }
+        mock_renderer.normalize_component_path!(context, opts)
+        expect(opts[:prefixes]).to eq(['pages'])
       end
     end
 
     context 'when value is a String' do
-      it 'returns the path itself' do
+      it 'changes the prefix to to empty' do
         opts = { component: 'path' }
         mock_renderer.normalize_component_path!(context, opts)
-        expect(opts[:component]).to eq('path')
+        expect(opts[:prefixes]).to eq([])
       end
     end
   end

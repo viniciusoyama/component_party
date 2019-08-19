@@ -11,13 +11,19 @@ module ComponentParty
       end
 
       def render(context, options)
-        options[:file] = template_path_from_component_path(options[:component])
+        options[:template] = template_path_from_component_path(options[:component])
         options[:locals] = { vm: create_view_model(context, options) }
         super(context, options)
       end
 
-      def render_template(template, layout_name = nil, locals = nil) #:nodoc:
-        super(decorate_template(template), layout_name, locals)
+      if Rails::VERSION::STRING.start_with?('6')
+        def render_template(context, template, layout_name = nil, locals = nil) #:nodoc:
+          super(context, decorate_template(template), layout_name, locals)
+        end
+      else
+        def render_template(template, layout_name = nil, locals = nil) #:nodoc:
+          super(decorate_template(template), layout_name, locals)
+        end
       end
 
       def decorate_template(template)

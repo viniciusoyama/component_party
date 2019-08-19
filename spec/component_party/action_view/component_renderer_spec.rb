@@ -6,24 +6,6 @@ describe ComponentParty::ActionView::ComponentRenderer do
     'my-component-path'
   )}
 
-  describe '#render' do
-    it "renders the component template" do
-      rendered = subject.render(double, { component: 'user_list'})
-
-      expect(rendered).to include('Listing Users')
-    end
-
-    it "passes the vm as locals" do
-      context = double('view context')
-      opts = { component: 'component_rendering_vm_testing', view_model_data: { number: 'two' } }
-      expect(subject).to receive(:create_view_model).with(context, opts).and_return(OpenStruct.new(number: 'two'))
-
-      rendered = subject.render(context, opts)
-
-      expect(rendered).to include('View Model Number: two')
-    end
-  end
-
   describe '#create_view_model' do
     let(:context) { double('view-context') }
     let(:options) { {component: 'component_path', view_model_data: { key: 'value' }} }
