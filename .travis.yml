@@ -1,12 +1,18 @@
 env:
   global:
     - CC_TEST_REPORTER_ID=2373c9fa7226b98ccf8bef72f133bc37b4cef57085c027e144a3b2fc71ce7558
+    - CI_NODE_TOTAL=5
   matrix:
-    - "RAILS_VERSION=4.2.0 BUNDLER_VERSION=1.17.3"
-    - "RAILS_VERSION=5.0.0 BUNDLER_VERSION=2.0.2"
-    - "RAILS_VERSION=5.1.0 BUNDLER_VERSION=2.0.2"
-    - "RAILS_VERSION=5.2.0 BUNDLER_VERSION=2.0.2"
-    - "RAILS_VERSION=6.0.0 BUNDLER_VERSION=2.0.2"
+    - "RAILS_VERSION=4.2.0 BUNDLER_VERSION=1.17.3 CI_NODE_INDEX=1"
+    - "RAILS_VERSION=5.0.0 BUNDLER_VERSION=2.0.2 CI_NODE_INDEX=2"
+    - "RAILS_VERSION=5.1.0 BUNDLER_VERSION=2.0.2 CI_NODE_INDEX=3"
+    - "RAILS_VERSION=5.2.0 BUNDLER_VERSION=2.0.2 CI_NODE_INDEX=4"
+    - "RAILS_VERSION=6.0.0 BUNDLER_VERSION=2.0.2 CI_NODE_INDEX=5"
+
+branches:
+  only:
+    - develop
+    - master
 
 language: ruby
 
@@ -19,6 +25,10 @@ rvm:
 bundler_args: "--binstubs --standalone --without documentation --path ../bundle"
 
 before_install:
+  - 'curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"'
+  - 'unzip awscli-bundle.zip'
+  - './awscli-bundle/install -b ~/bin/aws'
+  - 'export PATH=~/bin:$PATH'
   - gem install -v ${BUNDLER_VERSION} bundler --no-rdoc --no-ri
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
@@ -35,4 +45,7 @@ notifications:
 
 after_script:
   - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter format-coverage -t simplecov -o ./coverage/codeclimate.$CI_NODE_INDEX.json ./coverage/spec/.resultset.json; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then aws s3 sync coverage/ "s3://componentparty/coverage/$TRAVIS_BUILD_NUMBER"; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then aws s3 sync "s3://componentparty/coverage/$TRAVIS_BUILD_NUMBER" coverage/; fi
   - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter sum-coverage --output - --parts $CI_NODE_TOTAL coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --input -; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter upload-coverage; fi 
